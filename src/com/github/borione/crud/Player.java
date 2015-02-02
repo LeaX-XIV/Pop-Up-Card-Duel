@@ -37,14 +37,20 @@ public class Player {
 		setAvatar(avatar);
 	}
 
-	public static Player factory(String username) {
+	/**
+	 * Factors a <code>Player</code> given the user.<br>
+	 * The player must exist on the database, or it would throw an exception.
+	 * @param user The user of an existing player.
+	 * @return A <code>Player</code> object with the characteristics of the pointed record of the db.
+	 * @throws IllegalArgumentException If the player with the given user doesn't exist.
+	 */
+	public static Player factory(String user) throws IllegalArgumentException {
 		Player player = null;
 		try {
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT * FROM players WHERE user = '" + username + "';");
+			ResultSet rs = stat.executeQuery("SELECT * FROM players WHERE user = '" + user + "';");
 			if(rs.next()) {
-				String user = rs.getString("user");
 				String password = rs.getString("password");
 				String name = rs.getString("name");
 				String mail = rs.getString("mail");
@@ -59,7 +65,7 @@ public class Player {
 			ct.closeConnection();
 			return player;
 		} catch (SQLException e) {
-			throw new IllegalArgumentException("No player was found with user = " + username);
+			throw new IllegalArgumentException("No player was found with user = " + user);
 		}
 	}
 
@@ -116,20 +122,7 @@ public class Player {
 	}
 	
 	public String getAvatarName() throws RuntimeException {
-		String query = "SELECT DISTINCT * FROM avatars WHERE id = " + getAvatar() + ";";
-		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery(query);
-			rs.next();
-			String name = rs.getString("name");
-			rs.close();
-			stat.close();
-			ct.closeConnection();
-			return name;
-		} catch (SQLException e) {
-			throw new RuntimeException("An error occurred during the run of the query\n" + query);
-		}
+		return Avatar.factory(getAvatar()).getName();
 	}
 
 	public void setAvatar(int avatar) {
