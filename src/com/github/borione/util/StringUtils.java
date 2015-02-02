@@ -92,7 +92,7 @@ public class StringUtils {
 	 * Extract the message digest from a string with the MD5 algorithm.
 	 * @param str The string from which get the digest.
 	 * @return A string indicating the digest (128 bits - 32 chars)
-	 * @throws RuntimeException
+	 * @throws RuntimeException Why should this even be thrown?
 	 */
 	public static String toMD5(String str) throws RuntimeException {
 		byte[] bytesStr;
@@ -100,7 +100,7 @@ public class StringUtils {
 			bytesStr = str.getBytes("UTF-8");
 			MessageDigest md = MessageDigest.getInstance("MD5");
 			byte[] bytesDigest = md.digest(bytesStr);
-			return bytesDigest.toString();
+			return ByteUtils.toHexString(bytesDigest);
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 		} catch (NoSuchAlgorithmException e) {

@@ -6,13 +6,16 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-public class ConnectionTest {
+public class ConnectionTest implements Cloneable {
+	
+	public static final ConnectionTest DEFAULT = new ConnectionTest("jdbc:mysql://localhost:3306", "popup", "root", "masterkey");
 	
 	private String address;
 	private String db;
 	private String user;
 	private String password;
 	private Connection conn;
+	private boolean open;
 	
 	public ConnectionTest(String address, String db, String user, String password) {
 		setAddress(address);
@@ -20,6 +23,7 @@ public class ConnectionTest {
 		setUser(user);
 		setPassword(password);
 		conn = null;
+		open = false;
 		openConnection();		
 	}
 
@@ -55,9 +59,14 @@ public class ConnectionTest {
 		this.password = password;
 	}
 	
+	public boolean isOpen() {
+		return open;
+	}
+	
 	public void openConnection() {
 		try {
 			conn = DriverManager.getConnection(getAddress() + "/" + getDb(), getUser(), getPassword());
+			open = true;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			JOptionPane.showMessageDialog(null, "Si è verificato un errore durante la connessione al server.", "ERRORE", JOptionPane.ERROR_MESSAGE, null);
@@ -67,6 +76,7 @@ public class ConnectionTest {
 	public void closeConnection() {
 		try {
 			conn.close();
+			open = false;
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(null, "Si è verificato un errore durante la disconnessione al server.", "ERRORE", JOptionPane.ERROR_MESSAGE, null);
 		}
@@ -74,6 +84,14 @@ public class ConnectionTest {
 
 	public Connection getConnection() {
 		return conn;
+	}
+	
+	public ConnectionTest clone() {
+		ConnectionTest ct = new ConnectionTest(getAddress(), getDb(), getUser(), getPassword());
+		if(!ct.isOpen()) {
+			ct.closeConnection();
+		}
+		return ct;
 	}
 	
 	public static void main(String[] args) {
