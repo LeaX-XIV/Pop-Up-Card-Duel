@@ -6,7 +6,10 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.plaf.ListUI;
+
 import com.github.borione.network.ConnectionTest;
+import com.github.borione.util.ListUtils;
 
 public class Effect {
 
@@ -74,17 +77,11 @@ public class Effect {
 				// Do nothing
 			}
 		}
-		// FIXME: DELETE null VALUES
-		return results;
+		return ListUtils.deleteNull(results);
 	}
-
-	@Override
-	public String toString() {
+	
+	public String getCpCost() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("Id: " + getId() +
-				"\nName: " + getName() +
-				"\nDescription: " + getDescription() +
-				"\nCost: ");
 		List<CpCost> cpCosts = retriveCpCost();
 		cpCosts.remove(null);
 		if(cpCosts.isEmpty()) {
@@ -96,6 +93,17 @@ public class Effect {
 			}
 			sb.delete(sb.length() - 2, sb.length());
 		}
+		
+		return sb.toString();
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Id: " + getId() +
+				"\nName: " + getName() +
+				"\nDescription: " + getDescription() +
+				"\nCost: " + getCpCost());
 		return sb.toString();
 	}
 	

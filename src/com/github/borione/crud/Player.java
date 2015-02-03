@@ -4,8 +4,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.github.borione.network.ConnectionTest;
+import com.github.borione.util.ListUtils;
 
 public class Player {
 
@@ -141,10 +144,27 @@ public class Player {
 				"\nAvatar: " + getAvatarName());
 		return sb.toString();
 	}
+	
+	public List<Card> retriveCollection() {
+		List<Card> collection = new ArrayList<Card>();
+		
+		try {
+			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			Statement stat = ct.getConnection().createStatement();
+			ResultSet rs = stat.executeQuery("SELECT * FROM collections WHERE player = '" + getUser() + "';");
+			
+			while(rs.next()) {
+				collection.add(Card.factory(rs.getInt("card")));
+			}
+		} catch(SQLException e) {
+			throw new RuntimeException("An error occurred while fetching data from the db.");
+		}
+		
+		return collection;
+	}
 
 	public static void main(String[] args) {
-		System.out.println(Player.factory("LeaX_XIV"));
-		System.out.println("\n-----------------------------\n");
-		System.out.println(Player.factory("CapraTheBest"));
+		Player master = Player.factory("LeaX_XIV");
+		System.out.println(master + "\n\n" + ListUtils.toString(master.retriveCollection(), "\n----------------------\n"));
 	}
 }
