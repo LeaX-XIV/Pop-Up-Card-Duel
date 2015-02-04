@@ -107,6 +107,10 @@ public class Deck {
 		return cards;
 	}
 	
+	public int retriveNumberCards() {
+		return retriveCards().size();
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();

@@ -110,6 +110,20 @@ public class Duel {
 		
 		return winner;
 	}
+	
+	public Player retriveLoser() {
+		Player loser = null;
+		if(getResult() != Result.TIE && getResult() != Result.ERROR) {
+			if(getResult() == Result.WIN1) {
+				loser = Player.factory(getPlayer2());
+			}
+			else {
+				loser = Player.factory(getPlayer1());
+			}
+		}
+		
+		return loser;
+	}
 
 	public void setResult(Result result) {
 		this.result = result;
