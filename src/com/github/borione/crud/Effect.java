@@ -6,8 +6,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.plaf.ListUI;
-
 import com.github.borione.network.ConnectionTest;
 import com.github.borione.util.ListUtils;
 

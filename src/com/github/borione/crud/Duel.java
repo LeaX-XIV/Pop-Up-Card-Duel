@@ -1,0 +1,129 @@
+package com.github.borione.crud;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
+
+import com.github.borione.network.ConnectionTest;
+
+enum Result {
+	WIN1,
+	WIN2,
+	TIE,
+	ERROR
+}
+
+public class Duel {
+	
+	private int id;
+	private String player1;
+	private String player2;
+	private Timestamp date;
+	private Result result;
+	
+	public Duel(int id, String player1, String player2, Timestamp date, Result result) {
+		setId(id);
+		setPlayer1(player1);
+		setPlayer2(player2);
+		setDate(date);
+		setResult(result);
+	}
+	
+	public static Duel factory(int id) {
+		Duel duel = null;
+		try {
+			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			Statement stat = ct.getConnection().createStatement();
+			ResultSet rs = stat.executeQuery("SELECT * FROM duels WHERE id = " + id + ";");
+			if(rs.next()) {
+				String player1 = rs.getString("player1");
+				String player2 = rs.getString("player2");
+				Timestamp date = rs.getTimestamp("date");
+				Result result = Result.valueOf(rs.getString("result"));
+				
+				duel = new Duel(id, player1, player2, date, result);
+			}
+			rs.close();
+			stat.close();
+			ct.closeConnection();
+			return duel;
+		} catch (SQLException e) {
+			throw new IllegalArgumentException("No duel was found with id = " + id + ".");
+		}
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getPlayer1() {
+		return player1;
+	}
+	
+	public Player retrivePlayer1() {
+		return Player.factory(player1);
+	}
+
+	public void setPlayer1(String player1) {
+		this.player1 = player1;
+	}
+
+	public String getPlayer2() {
+		return player2;
+	}
+	
+	public Player retrivePlayer2() {
+		return Player.factory(player2);
+	}
+
+	public void setPlayer2(String player2) {
+		this.player2 = player2;
+	}
+
+	public Timestamp getDate() {
+		return date;
+	}
+
+	public void setDate(Timestamp date) {
+		this.date = date;
+	}
+
+	public Result getResult() {
+		return result;
+	}
+	
+	public Player retriveWinner() {
+		Player winner = null;
+		if(getResult() != Result.TIE && getResult() != Result.ERROR) {
+			if(getResult() == Result.WIN1) {
+				winner = Player.factory(getPlayer1());
+			}
+			else {
+				winner = Player.factory(getPlayer2());
+			}
+		}
+		
+		return winner;
+	}
+
+	public void setResult(Result result) {
+		this.result = result;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("Id: " + getId() +
+				"\nPlayer1: " + retrivePlayer1().getName() +
+				"\nPlayer2: " + retrivePlayer2().getName() +
+				"\nDate: " + getDate() +
+				"\nResult: " + getResult());
+		return sb.toString();
+	}
+
+}

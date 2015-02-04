@@ -60,7 +60,7 @@ public class Player {
 				Timestamp registration = rs.getTimestamp("registration");
 				Timestamp lastLogin = rs.getTimestamp("lastlogin");
 				int avatar = rs.getInt("avatar");
-				
+
 				player = new Player(user, password, name, mail, registration, lastLogin, avatar);
 			}
 			rs.close();
@@ -75,47 +75,47 @@ public class Player {
 	public String getUser() {
 		return user;
 	}
-	
+
 	public void setUser(String user) {
 		this.user = user;
 	}
-	
+
 	public String getPassword() {
 		return password;
 	}
-	
+
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
+
 	public String getName() {
 		return name;
 	}
-	
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
 	public String getMail() {
 		return mail;
 	}
-	
+
 	public void setMail(String mail) {
 		this.mail = mail;
 	}
-	
+
 	public Timestamp getRegistration() {
 		return registration;
 	}
-	
+
 	public void setRegistration(Timestamp registration) {
 		this.registration = registration;
 	}
-	
+
 	public Timestamp getLastLogin() {
 		return lastLogin;
 	}
-	
+
 	public void setLastLogin(Timestamp lastLogin) {
 		this.lastLogin = lastLogin;
 	}
@@ -123,7 +123,7 @@ public class Player {
 	public int getAvatar() {
 		return avatar;
 	}
-	
+
 	public String getAvatarName() throws RuntimeException {
 		return Avatar.factory(getAvatar()).getName();
 	}
@@ -131,7 +131,7 @@ public class Player {
 	public void setAvatar(int avatar) {
 		this.avatar = avatar;
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -144,23 +144,116 @@ public class Player {
 				"\nAvatar: " + getAvatarName());
 		return sb.toString();
 	}
-	
+
 	public List<Card> retriveCollection() {
 		List<Card> collection = new ArrayList<Card>();
-		
+
 		try {
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM collections WHERE player = '" + getUser() + "';");
-			
+
 			while(rs.next()) {
 				collection.add(Card.factory(rs.getInt("card")));
 			}
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
 		}
-		
+
 		return collection;
+	}
+
+	public List<Deck> retriveDecks() {
+		List<Deck> decks = new ArrayList<Deck>();
+
+		try {		
+			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			Statement stat = ct.getConnection().createStatement();
+			ResultSet rs = stat.executeQuery("SELECT DISTINCT deck FROM collection_deck WHERE player = '" + getUser() + "';");
+			while(rs.next()) {
+				int deck = rs.getInt("deck");
+				decks.add(Deck.factory(deck));
+			}
+			rs.close();
+			stat.close();
+			ct.closeConnection();
+		} catch (SQLException e) {
+			throw new RuntimeException("An error occurred while fetching data from db.");
+		}
+		
+		return decks;
+	}
+	
+	public List<Duel> retriveDuels() {
+		List<Duel> duels = new ArrayList<Duel>();
+		
+		try {		
+			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			Statement stat = ct.getConnection().createStatement();
+			ResultSet rs = stat.executeQuery("SELECT DISTINCT id FROM duels WHERE player1 = '" + getUser() + "' OR player2 = '" + getUser() + "';");
+			while(rs.next()) {
+				int id = rs.getInt("id");
+				duels.add(Duel.factory(id));
+			}
+			rs.close();
+			stat.close();
+			ct.closeConnection();
+		} catch (SQLException e) {
+			throw new RuntimeException("An error occurred while fetching data from db.");
+		}
+		
+		return duels;
+	}
+	
+	public List<Duel> retriveWins() {
+		List<Duel> duels = retriveDuels();
+		List<Duel> wins = new ArrayList<Duel>();
+		
+		for (Duel duel : duels) {
+			if(duel.retriveWinner().getUser().equals(getUser())) {
+				wins.add(duel);
+			}
+		}
+		
+		return wins;
+	}
+	
+	public int countWins() {
+		return retriveWins().size();
+	}
+	
+	public List<Duel> retriveLosses() {
+		List<Duel> duels = retriveDuels();
+		List<Duel> losses = new ArrayList<Duel>();
+		
+		for (Duel duel : duels) {
+			if(duel.retriveWinner() != null && !duel.retriveWinner().getUser().equals(getUser())) {
+				losses.add(duel);
+			}
+		}
+		
+		return losses;
+	}
+	
+	public int countLosses() {
+		return retriveLosses().size();
+	}
+	
+	public List<Duel> retriveTies() {
+		List<Duel> duels = retriveDuels();
+		List<Duel> ties = new ArrayList<Duel>();
+		
+		for (Duel duel : duels) {
+			if(duel.getResult().equals(Result.TIE)) {
+				ties.add(duel);
+			}
+		}
+		
+		return ties;
+	}
+	
+	public int countTies() {
+		return retriveTies().size();
 	}
 
 	public static void main(String[] args) {
