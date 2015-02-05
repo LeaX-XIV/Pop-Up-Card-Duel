@@ -2,6 +2,8 @@ package com.github.borione.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
+import java.awt.Point;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -17,6 +19,7 @@ import java.awt.image.BufferedImage;
 import com.github.borione.gui.components.HintTextField;
 import com.github.borione.gui.components.ImagePanel;
 import com.github.borione.gui.components.MotionPanel;
+import com.github.borione.gui.components.ToolTip;
 
 import java.awt.Component;
 import java.io.IOException;
@@ -30,7 +33,9 @@ import javax.swing.LayoutStyle.ComponentPlacement;
 
 import java.awt.Color;
 import java.awt.Font;
+
 import org.eclipse.wb.swing.FocusTraversalOnArray;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -43,6 +48,11 @@ public class Login extends JFrame {
 	private JTextField txtName;
 	private JTextField txtMail;
 	private JTextField txtConfirmMail;
+	
+	private ToolTip usernameTT = new ToolTip("The username you will use to login.");
+	private ToolTip passwordTT = new ToolTip("Must be minumum 8 characters.");
+	private ToolTip nameTT = new ToolTip("Other players will view you with this name.");
+	private ToolTip mailTT = new ToolTip("Give us your e-mail. It's cool!");
 
 	/**
 	 * Launch the application.
@@ -64,19 +74,14 @@ public class Login extends JFrame {
 	 * Create the frame.
 	 */
 	public Login() {
+		
+		// XXX: Do something for this mess
 		setResizable(false);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 269, 469);
-		BufferedImage backgroungImage;
-		try {
-			backgroungImage = ImageIO.read(getClass().getResource("/images/login-back.png"));
-			contentPane = new ImagePanel(backgroungImage);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			contentPane = new JPanel();
-			e.printStackTrace();
-		}
+		Image background = getToolkit().createImage(getClass().getResource("/images/login-back.gif"));
+		contentPane = new ImagePanel(background);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
@@ -127,6 +132,25 @@ public class Login extends JFrame {
 		
 		JLabel label = new JLabel("");
 		label.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
+		label.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(!usernameTT.isVisible()) {
+					Point p = label.getLocationOnScreen();
+					p.x += label.getWidth() + 15;
+					p.y -= usernameTT.getHeight() / 3;
+					
+					usernameTT.setLocation(p);
+					usernameTT.setVisible(true);
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(usernameTT.isVisible()) {
+					usernameTT.setVisible(false);
+				}
+			}
+		});
 		
 		txtPassword = new HintTextField("Password");
 		txtPassword.setCaretColor(Color.BLACK);
@@ -137,6 +161,25 @@ public class Login extends JFrame {
 		
 		JLabel label_1 = new JLabel("");
 		label_1.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
+		label_1.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(!passwordTT.isVisible()) {
+					Point p = label_1.getLocationOnScreen();
+					p.x += label_1.getWidth() + 15;
+					p.y -= passwordTT.getHeight() / 3;
+					
+					passwordTT.setLocation(p);
+					passwordTT.setVisible(true);
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(passwordTT.isVisible()) {
+					passwordTT.setVisible(false);
+				}
+			}
+		});
 		
 		txtCofirmPass = new HintTextField("Confirm Password");
 		txtCofirmPass.setCaretColor(Color.BLACK);
@@ -168,8 +211,46 @@ public class Login extends JFrame {
 		
 		JLabel label_2 = new JLabel("");
 		label_2.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
+		label_2.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(!nameTT.isVisible()) {
+					Point p = label_2.getLocationOnScreen();
+					p.x += label_2.getWidth() + 15;
+					p.y -= nameTT.getHeight() / 3;
+					
+					nameTT.setLocation(p);
+					nameTT.setVisible(true);
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(nameTT.isVisible()) {
+					nameTT.setVisible(false);
+				}
+			}
+		});
 		
 		JLabel label_3 = new JLabel("");
+		label_3.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				if(!mailTT.isVisible()) {
+					Point p = label_3.getLocationOnScreen();
+					p.x += label_3.getWidth() + 15;
+					p.y -= mailTT.getHeight() / 3;
+					
+					mailTT.setLocation(p);
+					mailTT.setVisible(true);
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(mailTT.isVisible()) {
+					mailTT.setVisible(false);
+				}
+			}
+		});
 		label_3.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
 		GroupLayout gl_fieldPanel = new GroupLayout(fieldPanel);
 		gl_fieldPanel.setHorizontalGroup(
