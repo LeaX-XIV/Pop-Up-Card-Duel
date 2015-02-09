@@ -5,7 +5,6 @@ import java.awt.EventQueue;
 import java.awt.Image;
 import java.awt.Point;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -14,7 +13,6 @@ import javax.swing.ImageIcon;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
 
 import com.github.borione.gui.components.HintTextField;
 import com.github.borione.gui.components.ImagePanel;
@@ -22,7 +20,6 @@ import com.github.borione.gui.components.MotionPanel;
 import com.github.borione.gui.components.ToolTip;
 
 import java.awt.Component;
-import java.io.IOException;
 import java.awt.Dimension;
 
 import javax.swing.GroupLayout;
@@ -38,6 +35,7 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 public class Login extends JFrame {
 
@@ -131,6 +129,20 @@ public class Login extends JFrame {
 		txtUsername.setColumns(10);
 		
 		JLabel label = new JLabel("");
+		label.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				Point mouse = label.getMousePosition();
+				Point p = label.getLocationOnScreen();
+				p.x += label.getWidth() + 15;
+				p.y -= usernameTT.getHeight() / 3;
+				
+				int x = mouse.x + (mouse.x/2);
+				int y = mouse.y - (mouse.y/2);
+				
+				usernameTT.setLocation(p.x - (x/6), p.y - (y/6));
+			}
+		});
 		label.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
 		label.addMouseListener(new MouseAdapter() {
 			@Override
@@ -144,6 +156,7 @@ public class Login extends JFrame {
 					usernameTT.setVisible(true);
 				}
 			}
+			
 			@Override
 			public void mouseExited(MouseEvent e) {
 				if(usernameTT.isVisible()) {
@@ -160,6 +173,20 @@ public class Login extends JFrame {
 		txtPassword.setColumns(10);
 		
 		JLabel label_1 = new JLabel("");
+		label_1.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				Point mouse = label_1.getMousePosition();
+				Point p = label_1.getLocationOnScreen();
+				p.x += label_1.getWidth() + 15;
+				p.y -= passwordTT.getHeight() / 3;
+				
+				int x = mouse.x + (mouse.x/2);
+				int y = mouse.y - (mouse.y/2);
+				
+				passwordTT.setLocation(p.x - (x/6), p.y - (y/6));
+			}
+		});
 		label_1.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
 		label_1.addMouseListener(new MouseAdapter() {
 			@Override
@@ -210,6 +237,20 @@ public class Login extends JFrame {
 		txtConfirmMail.setColumns(10);
 		
 		JLabel label_2 = new JLabel("");
+		label_2.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				Point mouse = label_2.getMousePosition();
+				Point p = label_2.getLocationOnScreen();
+				p.x += label.getWidth() + 15;
+				p.y -= nameTT.getHeight() / 3;
+				
+				int x = mouse.x + (mouse.x/2);
+				int y = mouse.y - (mouse.y/2);
+				
+				nameTT.setLocation(p.x - (x/6), p.y - (y/6));
+			}
+		});
 		label_2.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
 		label_2.addMouseListener(new MouseAdapter() {
 			@Override
@@ -249,6 +290,21 @@ public class Login extends JFrame {
 				if(mailTT.isVisible()) {
 					mailTT.setVisible(false);
 				}
+			}
+		});
+		
+		label_3.addMouseMotionListener(new MouseMotionAdapter() {
+			@Override
+			public void mouseMoved(MouseEvent arg0) {
+				Point mouse = label_3.getMousePosition();
+				Point p = label_3.getLocationOnScreen();
+				p.x += label.getWidth() + 15;
+				p.y -= mailTT.getHeight() / 3;
+				
+				int x = mouse.x + (mouse.x/2);
+				int y = mouse.y - (mouse.y/2);
+				
+				mailTT.setLocation(p.x - (x/6), p.y - (y/6));
 			}
 		});
 		label_3.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
@@ -313,7 +369,8 @@ public class Login extends JFrame {
 		panelSignUp.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnSignUp = new JButton("SIGN UP");
+		JButton btnSignUp = new JButton("");
+		btnSignUp.setIcon(new ImageIcon(Login.class.getResource("/images/signup-button.png")));
 		btnSignUp.setFocusPainted(false);
 		btnSignUp.setFont(new Font("Times New Roman", Font.BOLD, 39));
 		btnSignUp.setForeground(Color.WHITE);
@@ -330,7 +387,7 @@ public class Login extends JFrame {
 		
 		JPanel FieldPanel = new JPanel();
 		FieldPanel.setOpaque(false);
-		panelLogin.add(FieldPanel, BorderLayout.NORTH);
+		panelLogin.add(FieldPanel, BorderLayout.CENTER);
 		
 		HintTextField hintTextField = new HintTextField("Password");
 		hintTextField.setOpaque(false);
@@ -372,7 +429,8 @@ public class Login extends JFrame {
 		panelLogin.add(panel_2, BorderLayout.SOUTH);
 		panel_2.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnLogin = new JButton("LOGIN");
+		JButton btnLogin = new JButton("");
+		btnLogin.setIcon(new ImageIcon(Login.class.getResource("/images/login-button.png")));
 		btnLogin.setFocusPainted(false);
 		btnLogin.setForeground(Color.WHITE);
 		btnLogin.setFont(new Font("Times New Roman", Font.BOLD, 39));
