@@ -59,5 +59,21 @@ public class Esper {
 				"\nName: " + getName());
 		return sb.toString();
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Esper) {
+			Esper esper = (Esper) o;
+			
+			if(getId() == esper.getId() &&
+					getName().equals(esper.getName())) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 
 }

@@ -98,6 +98,8 @@ public class Avatar {
 		return sb.toString();
 	}
 	
+	// TODO: Override equals method
+	
 	public static void main(String[] args) {
 		Avatar def = Avatar.factory(1);
 		System.out.print(def);

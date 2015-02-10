@@ -81,5 +81,7 @@ public class CpCost {
 				"\nCost: " + getCost());
 		return sb.toString();
 	}
+	
+	// TODO: Override equals method
 
 }

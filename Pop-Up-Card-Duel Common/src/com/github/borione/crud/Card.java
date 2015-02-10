@@ -173,6 +173,8 @@ public class Card {
 		return sb.toString();
 	}
 	
+	// TODO: Override equals method
+	
 	public static void main(String[] args) {
 		System.out.println(Card.factory(1));
 	}

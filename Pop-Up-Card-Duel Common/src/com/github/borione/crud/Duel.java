@@ -139,5 +139,7 @@ public class Duel {
 				"\nResult: " + getResult());
 		return sb.toString();
 	}
+	
+	// TODO: Override equals method
 
 }

@@ -105,6 +105,23 @@ public class Effect {
 		return sb.toString();
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Effect) {
+			Effect effect = (Effect) o;
+			
+			if(getId() == effect.getId() &&
+					getName().equals(effect.getName()) &&
+					getDescription().equals(effect.getDescription())) {
+				equals = true;
+			}			
+		}
+		
+		return equals;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(Effect.factory(1));
 	}

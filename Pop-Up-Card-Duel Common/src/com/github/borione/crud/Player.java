@@ -144,6 +144,26 @@ public class Player {
 				"\nAvatar: " + getAvatarName());
 		return sb.toString();
 	}
+	
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Player) {
+			Player player = (Player) o;
+			if (getUser().equals(player.getUser()) &&
+					getPassword().equals(player.getPassword()) &&
+					getName().equals(player.getName()) &&
+					getMail().equals(player.getMail()) &&
+					getRegistration().equals(player.getRegistration()) &&
+					getLastLogin().equals(player.getLastLogin()) &&
+					getAvatar() == player.getAvatar()) {
+				equals = true;
+			}	
+		}
+		
+		return equals;
+	}
 
 	public List<Card> retriveCollection() {
 		List<Card> collection = new ArrayList<Card>();
