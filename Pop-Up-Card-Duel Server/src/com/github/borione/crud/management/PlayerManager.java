@@ -50,7 +50,7 @@ public class PlayerManager {
 			} finally {
 				try {
 					stat.close();
-				} catch (SQLException | NullPointerException e) {
+				} catch(SQLException | NullPointerException e) {
 					// Do nothing
 					return false;
 				}
@@ -85,7 +85,7 @@ public class PlayerManager {
 				try {
 					rs.close();
 					stat.close();
-				} catch (SQLException | NullPointerException e) {
+				} catch(SQLException | NullPointerException e) {
 					// Do nothing
 					return false;
 				}
@@ -106,13 +106,13 @@ public class PlayerManager {
 				if(stat.executeUpdate(command) == 0) {
 					return false;
 				}
-			} catch (SQLException e) {
+			} catch(SQLException e) {
 				// Error
 				return false;
 			} finally {
 				try {
 					stat.close();
-				} catch (SQLException | NullPointerException e) {
+				} catch(SQLException | NullPointerException e) {
 					// Do nothing
 					return false;
 				}
@@ -151,7 +151,7 @@ public class PlayerManager {
 			try {
 				rs.close();
 				stat.close();
-			} catch (SQLException | NullPointerException e) {
+			} catch(SQLException | NullPointerException e) {
 				// Do nothing
 				return null;
 			}
@@ -176,6 +176,12 @@ public class PlayerManager {
 			} catch(SQLException e) {
 				// Error
 				return false;
+			} finally {
+				try {
+					stat.close();
+				} catch(SQLException e) {
+					// Do nothing
+				}
 			}
 
 			return true;
