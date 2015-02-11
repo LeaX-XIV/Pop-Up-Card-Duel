@@ -98,7 +98,22 @@ public class Avatar {
 		return sb.toString();
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Avatar) {
+			Avatar avatar = (Avatar) o;
+			if(getId() == avatar.getId() &&
+					getName().equals(avatar.getName()) &&
+					getDescription().equals(avatar.getDescription()) &&
+					getPath().equals(avatar.getPath())) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 	
 	public static void main(String[] args) {
 		Avatar def = Avatar.factory(1);

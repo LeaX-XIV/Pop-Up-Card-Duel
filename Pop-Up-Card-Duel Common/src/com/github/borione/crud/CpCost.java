@@ -82,6 +82,20 @@ public class CpCost {
 		return sb.toString();
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof CpCost) {
+			CpCost cpCost = (CpCost) o;
+			if(getEffect() == cpCost.getEffect() &&
+					getCp().equals(cpCost.getCp()) &&
+					getCost() == cpCost.getCost()) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 
 }

@@ -12,11 +12,13 @@ import com.github.borione.network.ConnectionTest;
 public class Deck {
 
 	private int id;
+	private String player;
 	private String name;
 	private Date creationDate;
 
-	public Deck(int id, String name, Date creationDate) {
+	public Deck(int id, String player, String name, Date creationDate) {
 		setId(id);
+		setPlayer(player);
 		setName(name);
 		setCreationDate(creationDate);
 	}
@@ -28,10 +30,11 @@ public class Deck {
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM decks WHERE id = " + id + ";");
 			if(rs.next()) {
+				String player = rs.getString("player");
 				String name = rs.getString("name");
 				Date creationDate = rs.getDate("creationDate");
 
-				deck = new Deck(id, name, creationDate);
+				deck = new Deck(id, player, name, creationDate);
 			}
 			rs.close();
 			stat.close();
@@ -49,7 +52,19 @@ public class Deck {
 	public void setId(int id) {
 		this.id = id;
 	}
-
+	
+	public String getPlayer() {
+		return player;
+	}
+	
+	public Player retrivePlayer() {
+		return Player.factory(getPlayer());
+	}
+	
+	public void setPlayer(String player) {
+		this.player = player;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -66,33 +81,13 @@ public class Deck {
 		this.creationDate = creationDate;
 	}
 
-	public Player retriveOwner() {
-		Player player = null;
-		try {		
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT DISTINCT player FROM collection_deck WHERE deck = " + id + ";");
-			rs.next();
-			String user = rs.getString("player");
-			player = Player.factory(user);
-
-			rs.close();
-			stat.close();
-			ct.closeConnection();
-		} catch (SQLException e) {
-			throw new RuntimeException("An error occurred while fetching data from db.");
-		}
-
-		return player;
-	}
-
 	public List<Card> retriveCards() {
 		List<Card> cards = new ArrayList<Card>();
 
 		try {		
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + ";");
+			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + " AND player = '" + player + ";");
 			while(rs.next()) {
 				int card = rs.getInt("card");
 				cards.add(Card.factory(card));
@@ -114,7 +109,7 @@ public class Deck {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		Player owner = retriveOwner();
+		Player owner = retrivePlayer();
 		List<Card> cards = retriveCards();
 		sb.append("Id: " + getId() +
 				"\nName: " + getName() +
@@ -127,6 +122,21 @@ public class Deck {
 		return sb.toString();		
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Deck) {
+			Deck deck = (Deck) o;
+			if(getId() == deck.getId() &&
+					getPlayer().equals(deck.getPlayer()) &&
+					getName().equals(deck.getName()) &&
+					getCreationDate().equals(deck.getCreationDate())) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 
 }

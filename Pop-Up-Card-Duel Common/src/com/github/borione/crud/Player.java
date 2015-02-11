@@ -189,9 +189,9 @@ public class Player {
 		try {		
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT DISTINCT deck FROM collection_deck WHERE player = '" + getUser() + "';");
+			ResultSet rs = stat.executeQuery("SELECT id FROM decks WHERE player = '" + getUser() + "';");
 			while(rs.next()) {
-				int deck = rs.getInt("deck");
+				int deck = rs.getInt("id");
 				decks.add(Deck.factory(deck));
 			}
 			rs.close();
@@ -279,5 +279,6 @@ public class Player {
 	public static void main(String[] args) {
 		Player master = Player.factory("LeaX_XIV");
 		System.out.println(master + "\n\n" + ListUtils.toString(master.retriveCollection(), "\n----------------------\n"));
+		System.out.println(ListUtils.toString(master.retriveDecks(), "\n\n--------------------\n\n"));
 	}
 }

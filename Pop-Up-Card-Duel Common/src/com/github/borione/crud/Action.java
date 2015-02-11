@@ -84,7 +84,21 @@ public class Action {
 		return sb.toString();
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Action) {
+			Action action = (Action) o;
+			if(getId() == action.getId() &&
+					getPosition().equals(action.getPosition()) &&
+					getType().equals(action.getType())) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 	
 	public static void main(String[] args) {
 		for (int i = 1; i <= 8; i++) {

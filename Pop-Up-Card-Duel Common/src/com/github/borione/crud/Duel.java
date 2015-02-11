@@ -140,6 +140,23 @@ public class Duel {
 		return sb.toString();
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Duel) {
+			Duel duel = (Duel) o;
+			
+			if(getId() == duel.getId() &&
+					getPlayer1().equals(duel.getPlayer1()) &&
+					getPlayer2().equals(duel.getPlayer2()) &&
+					getDate().equals(duel.getDate()) &&
+					getResult().equals(duel.getResult())) {
+				equals = true;
+			}		
+		}
+		
+		return equals;
+	}
 
 }

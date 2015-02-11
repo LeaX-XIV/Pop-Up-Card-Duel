@@ -173,7 +173,25 @@ public class Card {
 		return sb.toString();
 	}
 	
-	// TODO: Override equals method
+	@Override
+	public boolean equals(Object o) {
+		boolean equals = false;
+		
+		if (o instanceof Card) {
+			Card card = (Card) o;
+			if(getId() == card.getId() &&
+					getEsper() == card.getEsper() &&
+					getAttack().equals(card.getAttack()) &&
+					getPower() == card.getPower() &&
+					getRarity().equals(card.getRarity()) &&
+					getColor().equals(card.getColor()) &&
+					getEffect() == card.getEffect()) {
+				equals = true;
+			}
+		}
+		
+		return equals;
+	}
 	
 	public static void main(String[] args) {
 		System.out.println(Card.factory(1));
