@@ -87,7 +87,7 @@ public class Deck {
 		try {		
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + " AND player = '" + player + "';");
+			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + " AND player = '" + player + ";");
 			while(rs.next()) {
 				int card = rs.getInt("card");
 				cards.add(Card.factory(card));

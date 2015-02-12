@@ -247,7 +247,7 @@ public class Player {
 		List<Duel> losses = new ArrayList<Duel>();
 		
 		for (Duel duel : duels) {
-			if(duel.retriveLoser().getUser().equals(getUser())) {
+			if(duel.retriveWinner() != null && !duel.retriveWinner().getUser().equals(getUser())) {
 				losses.add(duel);
 			}
 		}
