@@ -2,4 +2,5 @@
 /Pop-Up-Card-Duel Common/bin/
 /Pop-Up-Card-Duel Server/bin/
 /.metadata/
-/Pop-Up-Card-Duel Common/src/com/github/borione/network/ConnectionTest.java
+*/ConnectionTest.java
+*/Pop-Up-Card-Duel Common.jar
