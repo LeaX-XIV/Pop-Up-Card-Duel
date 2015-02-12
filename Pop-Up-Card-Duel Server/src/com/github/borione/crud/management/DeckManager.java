@@ -5,52 +5,51 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import com.github.borione.crud.Card;
+import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.network.ConnectionTest;
-import com.github.borione.util.StringUtils;
 
-public class PlayerManager {
+public class DeckManager {
 
 	private ConnectionTest conn;
 
-	public PlayerManager() {
+	public DeckManager() {
 		conn = ConnectionTest.DEFAULT.clone();
 	}
 
-	public boolean addPlayer(Player player) {
+	public boolean addDeck(Deck deck) {
 		Statement stat = null;
-		String registration;
-		String lastLogin;
+		String creation;
 
-		if(player != null) {
+		if(deck != null) {
 			try {
 				stat = conn.getConnection().createStatement();
 
-				registration = (player.getRegistration() == null ? "NULL" : "'" + player.getRegistration().toString() + "'");
-				lastLogin = (player.getLastLogin() == null ? "NULL" : "'" + player.getLastLogin().toString() + "'");
+				creation = deck.getCreationDate().toString();
+				// With this I'm sure the player exists
+				Player.factory(deck.getPlayer());
 
-				String command = "INSERT INTO players "
-						+ "(user, password, name, mail, registration, lastlogin, avatar) "
-						+ "VALUE ('" + player.getUser() + "', "
-						+ "'" + player.getPassword() + "', "
-						+ "'" + player.getName() + "', "
-						+ "'" + player.getMail() + "', "
-						+ registration + ", "
-						+ lastLogin + ", "
-						+ "'" + player.getAvatar() + "');";
+				String command = "INSERT INTO decks "
+						+ "(id, player, name, creationDate) "
+						+ "VALUES (" + deck.getId() + ", "
+						+ "'" + deck.getPlayer() + "', "
+						+ "'" + deck.getName() + "', "
+						+ "'" + creation + "');";
 
 				if(stat.executeUpdate(command) == 0) {
 					// Error
 					return false;
 				}
-			} catch(SQLException e) {
+			} catch(SQLException | IllegalArgumentException e) {
 				return false;
 			} finally {
 				try {
 					stat.close();
-				} catch(SQLException | NullPointerException e) {
+				} catch (SQLException | NullPointerException e) {
 					// Do nothing
 				}
 			}
@@ -61,20 +60,19 @@ public class PlayerManager {
 		return false;
 	}
 
-	public boolean updatePlayer(Player player) {
+	public boolean updateDeck(Deck deck) { // ONLY THE NAME CAN BE CHANGED
 		Statement stat = null;
 		ResultSet rs = null;
-		String lastLogin;
 
-		if(player != null) {
-			try { // Check if the player exists
+		if(deck != null) {
+			try { // Check if deck exists
 				stat = conn.getConnection().createStatement();
-				String query = "SELECT COUNT(*) AS number FROM players "
-						+ "WHERE user = '" + player.getUser() + "';";
+				String query = "SELECT COUNT(*) AS number FROM decks "
+						+ "WHERE id = " + deck.getId() + ";";
 				rs = stat.executeQuery(query);
 				rs.next();
 				if(rs.getInt(1) == 0) {
-					// The player doesn't exist
+					// The deck doesn't exist
 					return false;
 				}
 			} catch(SQLException e) {
@@ -91,14 +89,10 @@ public class PlayerManager {
 
 			try {
 				stat = conn.getConnection().createStatement();
-				lastLogin = (player.getLastLogin() == null ? "NULL" : "'" + player.getLastLogin().toString() + "'");
 
-				String command = "UPDATE players SET "
-						+ "password = '" + player.getPassword() + "', "
-						+ "mail = '" + player.getMail() + "', "
-						+ "lastlogin = " + lastLogin + ", "
-						+ "avatar = '" + player.getAvatar() + "' "
-						+ "WHERE user = '" + player.getUser() + "';";
+				String command = "UPDATE decks SET "
+						+ "name = '" + deck.getName() + "' "
+						+ "WHERE id = " + deck.getId() + ";";
 
 				if(stat.executeUpdate(command) == 0) {
 					// Error
@@ -121,26 +115,25 @@ public class PlayerManager {
 		return false;
 	}
 
-	public List<Player> listPlayers() {
-		List<Player> list = null;
+	public List<Deck> listDecks() {
+		List<Deck> list = null;
 
 		Statement stat = null;
 		ResultSet rs = null;
 
-		String user;
+		int id;
 
 		try {
 			stat = conn.getConnection().createStatement();
-			String query = "SELECT user FROM players;";
+			String query = "SELECT id FROM decks;";
 			rs = stat.executeQuery(query);
 
-			list = new ArrayList<Player>();
+			list = new ArrayList<Deck>();
 
 			while(rs.next()) {
-				user = rs.getString("user");
-				list.add(Player.factory(user));
+				id = rs.getInt("id");
+				list.add(Deck.factory(id));
 			}
-
 		} catch(SQLException e) {
 			// Error
 			return null;
@@ -152,19 +145,19 @@ public class PlayerManager {
 				// Do nothing
 			}
 		}
-
+		
 		return list;
 	}
-
-	public boolean deletePlayer(Player player) {
+	
+	public boolean deleteDeck(Deck deck) {
 		Statement stat = null;
-
-		if(player != null) {
+		
+		if(deck != null) {
 			try {
 				stat = conn.getConnection().createStatement();
-				String command = "DELETE FROM players "
-						+ "WHERE user = '" + player.getUser() + "';";
-
+				String command = "DELETE FROM decks "
+						+ "WHERE id = " + deck.getId() + ";";
+				
 				if(stat.executeUpdate(command) == 0) {
 					// Error
 					return false;
@@ -179,24 +172,24 @@ public class PlayerManager {
 					// Do nothing
 				}
 			}
-
+			
 			return true;
 		}
-
+		
 		return false;
 	}
-
+	
 	public static void main(String[] args) {
-		Player test = new Player("LeaX", StringUtils.toMD5("12345"), "LeaX_XIV", "test@test.com", new Timestamp(2222000L), null, 1);
-		PlayerManager pm = new PlayerManager();
-		if(pm.addPlayer(test)) {
-			test.setLastLogin(new Timestamp(1111111000L));
-			if(pm.updatePlayer(test)) {
-				if(pm.listPlayers().contains(test)) {
-					if(pm.deletePlayer(test)) {
+		Deck test = new Deck(5, "LeaX_XIV", "I love jinrui", new Timestamp(new Date().getTime()));
+		DeckManager dm = new DeckManager();
+		if(dm.addDeck(test)) {
+			test.setName("I love ningen");
+			if(dm.updateDeck(test)) {
+//				if(dm.listDecks().contains(test)) {
+					if(dm.deleteDeck(test)) {
 						System.out.println("It works! :)");
 					}
-				}
+//				}
 			}
 		}
 	}

@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,9 +15,9 @@ public class Deck {
 	private int id;
 	private String player;
 	private String name;
-	private Date creationDate;
+	private Timestamp creationDate;
 
-	public Deck(int id, String player, String name, Date creationDate) {
+	public Deck(int id, String player, String name, Timestamp creationDate) {
 		setId(id);
 		setPlayer(player);
 		setName(name);
@@ -32,7 +33,7 @@ public class Deck {
 			if(rs.next()) {
 				String player = rs.getString("player");
 				String name = rs.getString("name");
-				Date creationDate = rs.getDate("creationDate");
+				Timestamp creationDate = rs.getTimestamp("creationDate");
 
 				deck = new Deck(id, player, name, creationDate);
 			}
@@ -73,11 +74,11 @@ public class Deck {
 		this.name = name;
 	}
 
-	public Date getCreationDate() {
+	public Timestamp getCreationDate() {
 		return creationDate;
 	}
 
-	public void setCreationDate(Date creationDate) {
+	public void setCreationDate(Timestamp creationDate) {
 		this.creationDate = creationDate;
 	}
 
@@ -131,6 +132,7 @@ public class Deck {
 			if(getId() == deck.getId() &&
 					getPlayer().equals(deck.getPlayer()) &&
 					getName().equals(deck.getName()) &&
+					// TODO: omit check on nanos field
 					getCreationDate().equals(deck.getCreationDate())) {
 				equals = true;
 			}
