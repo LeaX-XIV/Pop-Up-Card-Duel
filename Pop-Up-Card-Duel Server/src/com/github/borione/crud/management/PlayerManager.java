@@ -141,7 +141,7 @@ public class PlayerManager {
 				list.add(Player.factory(user));
 			}
 
-		} catch(SQLException e) {
+		} catch(SQLException | IllegalArgumentException e) {
 			// Error
 			return null;
 		} finally {

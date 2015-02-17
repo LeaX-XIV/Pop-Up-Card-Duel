@@ -7,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 import com.github.borione.util.ListUtils;
 
 public class Player {

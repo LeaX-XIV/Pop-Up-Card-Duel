@@ -11,18 +11,16 @@ import javax.swing.JPanel;
 
 /**
  * 
- * Uploaded bt Sorter on stackoverflow.com
+ * Uploaded by Sorter on stackoverflow.com
  * http://stackoverflow.com/users/1097600/sorter
  *
  */
 public class MotionPanel extends JPanel {
 
 	private Point initialClick;
-	private JFrame parent;
 
 	public MotionPanel(final JFrame parent) {
-		this.parent = parent;
-
+		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {
 				initialClick = e.getPoint();

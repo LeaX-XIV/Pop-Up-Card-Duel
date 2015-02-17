@@ -5,7 +5,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 
 enum Result {
 	WIN1,

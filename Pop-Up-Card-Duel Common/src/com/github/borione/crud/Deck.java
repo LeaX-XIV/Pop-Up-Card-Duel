@@ -1,6 +1,5 @@
 package com.github.borione.crud;
 
-import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -8,7 +7,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 
 public class Deck {
 

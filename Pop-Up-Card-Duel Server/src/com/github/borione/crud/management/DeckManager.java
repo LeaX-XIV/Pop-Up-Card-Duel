@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.github.borione.crud.Card;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
+import com.github.borione.crud.Possession;
 import com.github.borione.network.ConnectionTest;
 
 public class DeckManager {
@@ -62,32 +62,10 @@ public class DeckManager {
 
 	public boolean updateDeck(Deck deck) { // ONLY THE NAME CAN BE CHANGED
 		Statement stat = null;
-		ResultSet rs = null;
 
 		if(deck != null) {
-			try { // Check if deck exists
-				stat = conn.getConnection().createStatement();
-				String query = "SELECT COUNT(*) AS number FROM decks "
-						+ "WHERE id = " + deck.getId() + ";";
-				rs = stat.executeQuery(query);
-				rs.next();
-				if(rs.getInt(1) == 0) {
-					// The deck doesn't exist
-					return false;
-				}
-			} catch(SQLException e) {
-				// Error
-				return false;
-			} finally {
-				try {
-					rs.close();
-					stat.close();
-				} catch(SQLException | NullPointerException e) {
-					// Do nothing			
-				}
-			}
-
 			try {
+				Deck.factory(deck.getId());	// Check deck existence
 				stat = conn.getConnection().createStatement();
 
 				String command = "UPDATE decks SET "
@@ -98,7 +76,7 @@ public class DeckManager {
 					// Error
 					return false;
 				}
-			} catch(SQLException e) {
+		} catch(SQLException | IllegalArgumentException e) {
 				// Error
 				return false;
 			} finally {
@@ -145,19 +123,19 @@ public class DeckManager {
 				// Do nothing
 			}
 		}
-		
+
 		return list;
 	}
-	
+
 	public boolean deleteDeck(Deck deck) {
 		Statement stat = null;
-		
+
 		if(deck != null) {
 			try {
 				stat = conn.getConnection().createStatement();
 				String command = "DELETE FROM decks "
 						+ "WHERE id = " + deck.getId() + ";";
-				
+
 				if(stat.executeUpdate(command) == 0) {
 					// Error
 					return false;
@@ -168,29 +146,109 @@ public class DeckManager {
 			} finally {
 				try {
 					stat.close();
-				} catch(SQLException e) {
+				} catch(SQLException | NullPointerException e) {
 					// Do nothing
 				}
 			}
+
+			return true;
+		}
+
+		return false;
+	}
+
+	public boolean addPossessionToDeck(int card, String player, int deck) {
+		Statement stat = null;
+
+		try {
+			stat = conn.getConnection().createStatement();
+
+			// Checking if records exist
+			Possession.factory(player, card);
+			Deck.factory(deck);
+
+			String command = "INSERT INTO collection_deck "
+					+ "(player, card, deck) "
+					+ "VALUE ('" + player + "', " + card + ", " + deck + ");";
 			
+			if(stat.executeUpdate(command) == 0) {
+				// Error
+				return false;
+			}
+		} catch(SQLException | IllegalArgumentException e) {
+			return false;
+		} finally {
+			try {
+				stat.close();
+			} catch(SQLException | NullPointerException e) {
+				// Do nothing
+			}
+		}
+
+		return true;
+	}
+
+	public boolean addPossessionToDeck(Possession p, Deck d) {
+		if(p != null && d != null) {
+			return addPossessionToDeck(p.getCard(), p.getPlayer(), d.getId());
+		}
+		return false;
+	}
+	
+	public boolean addPossessionsToDeck(List<Possession> l, Deck d) {
+		if(l != null && d != null) {
+			StringBuilder sbCommand = new StringBuilder();
+			// Checking if record exist
+			Deck.factory(d.getId());
+			sbCommand.append("INSERT INTO collection_deck (player, card, deck) VALUES ");
+			for (Possession p : l) {
+				// Checking if record exist
+				Possession.factory(p.getPlayer(), p.getCard());
+				sbCommand.append("('" + p.getPlayer() + "', " + p.getCard() + ", " + d.getId() + "), ");
+			}
+			sbCommand.delete(sbCommand.length() - 2, sbCommand.length());
+			sbCommand.append(";");
+			
+			Statement stat = null;
+			
+			try {
+				stat = conn.getConnection().createStatement();
+				
+				String command = sbCommand.toString();
+				
+				if(stat.executeUpdate(command) == 0) {
+					// Error
+					return false;
+				}
+			} catch(SQLException | IllegalArgumentException e) {
+				return false;
+			} finally {
+				try {
+					stat.close();
+				} catch(SQLException | NullPointerException e) {
+					// Do nothing
+				}
+			}
+
 			return true;
 		}
 		
 		return false;
 	}
-	
+
 	public static void main(String[] args) {
 		Deck test = new Deck(5, "LeaX_XIV", "I love jinrui", new Timestamp(new Date().getTime()));
 		DeckManager dm = new DeckManager();
 		if(dm.addDeck(test)) {
 			test.setName("I love ningen");
 			if(dm.updateDeck(test)) {
-//				if(dm.listDecks().contains(test)) {
-					if(dm.deleteDeck(test)) {
-						System.out.println("It works! :)");
-					}
-//				}
+				//				if(dm.listDecks().contains(test)) {
+				if(dm.deleteDeck(test)) {
+					System.out.println("It works! :)");
+				}
+				//				}
 			}
-		}
+		}		
+		dm.addPossessionToDeck(Possession.factory("LeaX_XIV", 2), Deck.factory(2));
 	}
 }

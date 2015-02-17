@@ -4,7 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 
 enum Position {
 	UP,

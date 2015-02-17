@@ -43,7 +43,7 @@ public class StringUtils {
 	 * @return The string in <code>HTML</code> format.
 	 */
 	public static String toHTML(String str) {
-		return "<html>".concat(str.replace(System.getProperty("line.separator"), "<br>").concat("</html>"));
+		return str.replace(System.getProperty("line.separator"), "<br>");
 	}
 	
 	/**
