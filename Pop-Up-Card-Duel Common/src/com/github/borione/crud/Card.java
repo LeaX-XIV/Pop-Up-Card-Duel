@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.connection.Sendable;
+import com.github.borione.util.Consts;
 import com.github.borione.util.ListUtils;
 
 enum Rarity {
@@ -29,7 +31,7 @@ enum CardColor {
 	GRAY
 }
 
-public class Card {
+public class Card implements Sendable {
 	
 	private int id;
 	private int esper;
@@ -193,8 +195,18 @@ public class Card {
 		return equals;
 	}
 	
+	@Override
+	public String formatData() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append("Card" + Consts.SEPARATOR);
+		// Cards won't be changed, so only ID is required to the server
+		sb.append(getId());
+		
+		return sb.toString();
+	}
+	
 	public static void main(String[] args) {
 		System.out.println(Card.factory(1));
 	}
-
 }

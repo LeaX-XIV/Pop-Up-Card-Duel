@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.connection.Sendable;
+import com.github.borione.util.Consts;
 import com.github.borione.util.ListUtils;
 
-public class Player {
+public class Player implements Sendable {
 
 	private String user;
 	private String password;
@@ -144,11 +146,11 @@ public class Player {
 				"\nAvatar: " + getAvatarName());
 		return sb.toString();
 	}
-	
+
 	@Override
 	public boolean equals(Object o) {
 		boolean equals = false;
-		
+
 		if (o instanceof Player) {
 			Player player = (Player) o;
 			if (getUser().equals(player.getUser()) &&
@@ -161,7 +163,7 @@ public class Player {
 				equals = true;
 			}	
 		}
-		
+
 		return equals;
 	}
 
@@ -200,13 +202,13 @@ public class Player {
 		} catch (SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from db.");
 		}
-		
+
 		return decks;
 	}
-	
+
 	public List<Duel> retriveDuels() {
 		List<Duel> duels = new ArrayList<Duel>();
-		
+
 		try {		
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
@@ -221,64 +223,85 @@ public class Player {
 		} catch (SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from db.");
 		}
-		
+
 		return duels;
 	}
-	
+
 	public List<Duel> retriveWins() {
 		List<Duel> duels = retriveDuels();
 		List<Duel> wins = new ArrayList<Duel>();
-		
+
 		for (Duel duel : duels) {
 			if(duel.retriveWinner().getUser().equals(getUser())) {
 				wins.add(duel);
 			}
 		}
-		
+
 		return wins;
 	}
-	
+
 	public int countWins() {
 		return retriveWins().size();
 	}
-	
+
 	public List<Duel> retriveLosses() {
 		List<Duel> duels = retriveDuels();
 		List<Duel> losses = new ArrayList<Duel>();
-		
+
 		for (Duel duel : duels) {
 			if(duel.retriveLoser().getUser().equals(getUser())) {
 				losses.add(duel);
 			}
 		}
-		
+
 		return losses;
 	}
-	
+
 	public int countLosses() {
 		return retriveLosses().size();
 	}
-	
+
 	public List<Duel> retriveTies() {
 		List<Duel> duels = retriveDuels();
 		List<Duel> ties = new ArrayList<Duel>();
-		
+
 		for (Duel duel : duels) {
 			if(duel.getResult().equals(Result.TIE)) {
 				ties.add(duel);
 			}
 		}
-		
+
 		return ties;
 	}
-	
+
 	public int countTies() {
 		return retriveTies().size();
+	}
+
+	@Override
+	public String formatData() {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("Player" + Consts.SEPARATOR);
+		sb.append(getUser() + Consts.SEPARATOR);
+		sb.append(getPassword() + Consts.SEPARATOR);
+		sb.append(getName() + Consts.SEPARATOR);
+		sb.append(getMail() + Consts.SEPARATOR);
+		sb.append(getRegistration().toString() + Consts.SEPARATOR);
+		try {
+			sb.append(getLastLogin().toString() + Consts.SEPARATOR);
+		} catch(NullPointerException e) {
+			sb.append("null" + Consts.SEPARATOR);
+		}
+		sb.append(getAvatar());
+
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {
 		Player master = Player.factory("LeaX_XIV");
 		System.out.println(master + "\n\n" + ListUtils.toString(master.retriveCollection(), "\n----------------------\n"));
 		System.out.println(ListUtils.toString(master.retriveDecks(), "\n\n--------------------\n\n"));
+		System.out.println("\n\n\n\n\n\n\n\n" + master.formatData());
 	}
 }

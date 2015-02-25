@@ -8,9 +8,9 @@ import javax.swing.JOptionPane;
 
 import com.github.borione.util.Consts;
 
-public class ConnectionTest implements Cloneable, Consts {
+public class ConnectionTest implements Cloneable {
 	
-	public static final ConnectionTest DEFAULT = new ConnectionTest(DB_ADDRESS, DB_NAME, DB_USER, DB_PASSWORD);
+	public static final ConnectionTest DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private String address;
 	private String db;
