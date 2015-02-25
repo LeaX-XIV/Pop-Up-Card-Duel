@@ -8,6 +8,7 @@ enum TypeRequest {
 
 public class Request {
 	
-	
+	private TypeRequest type;
+	private 
 
 }
