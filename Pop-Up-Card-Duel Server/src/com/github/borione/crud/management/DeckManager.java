@@ -11,7 +11,7 @@ import java.util.List;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.crud.Possession;
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 
 public class DeckManager {
 

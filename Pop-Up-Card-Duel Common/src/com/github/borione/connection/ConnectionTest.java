@@ -6,9 +6,11 @@ import java.sql.SQLException;
 
 import javax.swing.JOptionPane;
 
-public class ConnectionTest implements Cloneable {
+import com.github.borione.util.Consts;
+
+public class ConnectionTest implements Cloneable, Consts {
 	
-	public static final ConnectionTest DEFAULT = new ConnectionTest("jdbc:mysql://37.59.123.99:3306", "popup", "root", "boriobello96");
+	public static final ConnectionTest DEFAULT = new ConnectionTest(DB_ADDRESS, DB_NAME, DB_USER, DB_PASSWORD);
 	
 	private String address;
 	private String db;

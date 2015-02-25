@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.borione.crud.Player;
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 import com.github.borione.util.StringUtils;
 
 public class PlayerManager {

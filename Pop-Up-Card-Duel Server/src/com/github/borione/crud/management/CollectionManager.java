@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.github.borione.crud.Card;
 import com.github.borione.crud.Player;
-import com.github.borione.network.ConnectionTest;
+import com.github.borione.connection.ConnectionTest;
 
 public class CollectionManager {
 
