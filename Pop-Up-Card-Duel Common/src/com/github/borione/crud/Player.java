@@ -282,7 +282,7 @@ public class Player implements Sendable {
 	public String formatData() {
 		StringBuilder sb = new StringBuilder();
 
-		sb.append("Player" + Consts.SEPARATOR);
+		sb.append(getClass().getName() + Consts.SEPARATOR);
 		sb.append(getUser() + Consts.SEPARATOR);
 		sb.append(getPassword() + Consts.SEPARATOR);
 		sb.append(getName() + Consts.SEPARATOR);

@@ -46,7 +46,7 @@ public class TcpServer extends Thread {
 				 */
 
 				// Send
-				out.write("Stupid ZER0s");
+				out.write("Penis");
 				out.flush();
 				// Close stream
 				out.close();

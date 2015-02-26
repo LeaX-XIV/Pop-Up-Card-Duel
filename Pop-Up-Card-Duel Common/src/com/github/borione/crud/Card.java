@@ -42,6 +42,7 @@ public class Card implements Sendable {
 	private int effect;
 	
 	public Card(int id, int esper, String attack, int power, Rarity rarity, CardColor color, int effect) {
+		super();
 		setId(id);
 		setEsper(esper);
 		setAttack(attack);
@@ -49,6 +50,10 @@ public class Card implements Sendable {
 		setRarity(rarity);
 		setColor(color);
 		setEffect(effect);
+	}
+	
+	public Card(String arg) {
+		super();
 	}
 	
 	public static Card factory(int id) {
