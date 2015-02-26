@@ -153,15 +153,29 @@ public class Player implements Sendable {
 
 		if (o instanceof Player) {
 			Player player = (Player) o;
-			if (getUser().equals(player.getUser()) &&
-					getPassword().equals(player.getPassword()) &&
-					getName().equals(player.getName()) &&
-					getMail().equals(player.getMail()) &&
-					getRegistration().equals(player.getRegistration()) &&
-					getLastLogin().equals(player.getLastLogin()) &&
-					getAvatar() == player.getAvatar()) {
-				equals = true;
-			}	
+			try {
+				if (getUser().equals(player.getUser()) &&
+						getPassword().equals(player.getPassword()) &&
+						getName().equals(player.getName()) &&
+						getMail().equals(player.getMail()) &&
+						getRegistration().equals(player.getRegistration()) &&
+						getLastLogin().equals(player.getLastLogin()) &&
+						getAvatar() == player.getAvatar()) {
+					equals = true;
+				}
+
+			} catch(NullPointerException e) {
+				if (getUser().equals(player.getUser()) &&
+						getPassword().equals(player.getPassword()) &&
+						getName().equals(player.getName()) &&
+						getMail().equals(player.getMail()) &&
+						getRegistration().equals(player.getRegistration()) &&
+						getAvatar() == player.getAvatar() &&
+						getLastLogin() == null &&
+						player.getLastLogin() == null) {
+					equals = true;
+				}
+			}
 		}
 
 		return equals;

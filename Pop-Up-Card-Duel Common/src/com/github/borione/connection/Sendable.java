@@ -7,6 +7,7 @@ import java.util.Date;
 
 import com.github.borione.crud.Player;
 import com.github.borione.util.Consts;
+import com.github.borione.util.StringUtils;
 
 public interface Sendable {
 
@@ -28,7 +29,16 @@ public interface Sendable {
 			Class[] parTypes = con.getParameterTypes();
 			
 			for (int i = 0; i < parTypes.length; i++) {
-				par[i] = parTypes[i].cast((Object)args[i+1]);
+				// TODO: It seems to work, but we need to let it be more dynamic.
+				if(parTypes[i].equals(Timestamp.class)) {
+					par[i] = StringUtils.toTimestamp(args[i+1]);
+					continue;
+				}
+				if(parTypes[i].equals(int.class)) {
+					par[i] = Integer.parseInt(args[i+1]);
+					continue;
+				}
+				par[i] = parTypes[i].cast(args[i+1]);
 			}
 			
 			Sendable obj = (Sendable) con.newInstance(par);
@@ -46,7 +56,6 @@ public interface Sendable {
 			return null;
 		} catch (IllegalArgumentException e) {
 			// Error
-			e.printStackTrace();
 			return null;
 		} catch (InvocationTargetException e) {
 			// Error

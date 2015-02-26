@@ -35,21 +35,15 @@ public class TcpServer extends Thread {
 				connection = server.accept();
 				System.out.println(new Date().toString() + ": Request from " + connection.getInetAddress().toString() + ":" + connection.getPort());
 
-				// Create output stream with ISO-8859-1 coding
-				OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream(), "ISO-8859-1");
-
 				/* TODO: DO THINGS
 				 * 
 				 * 
 				 * 
 				 * 
 				 */
-
-				// Send
-				out.write("Penis");
-				out.flush();
-				// Close stream
-				out.close();
+				
+				Thread server = new ServerThread(connection);
+				server.start();
 
 			} catch(IOException e) {
 				// Do nothing
@@ -77,7 +71,13 @@ public class TcpServer extends Thread {
 		try {
 			TcpServer server = new TcpServer();
 			server.start();
+			int c = System.in.read();
+			server.interrupt();
+			server.join();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

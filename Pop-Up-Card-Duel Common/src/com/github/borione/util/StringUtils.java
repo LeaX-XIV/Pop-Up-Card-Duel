@@ -3,6 +3,10 @@ package com.github.borione.util;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * 
@@ -10,7 +14,7 @@ import java.security.NoSuchAlgorithmException;
  *
  */
 public class StringUtils {
-	
+
 	/**
 	 * Returns the string with capital letters.<br>
 	 * <br>
@@ -23,7 +27,7 @@ public class StringUtils {
 	public static String toUpper(String str) {
 		return str.toUpperCase();
 	}
-	
+
 	/**
 	 * Returns the string with small letters.<br>
 	 * <br>
@@ -36,7 +40,7 @@ public class StringUtils {
 	public static String toLower(String str) {
 		return str.toLowerCase();
 	}
-	
+
 	/**
 	 * Crowns the string in <code>html</code> tags, and replaces breaklines with <code>br</code> tags.
 	 * @param str The string to be <code>HTML</code>ized.
@@ -45,7 +49,7 @@ public class StringUtils {
 	public static String toHTML(String str) {
 		return str.replace(System.getProperty("line.separator"), "<br>");
 	}
-	
+
 	/**
 	 * Checks if the string can be parsed as a number.
 	 * @param str The string to be checked.
@@ -59,7 +63,7 @@ public class StringUtils {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Checks if the string is the value of a boolean.
 	 * @param str The string to be checked.
@@ -71,7 +75,7 @@ public class StringUtils {
 		}
 		return false;
 	}
-	
+
 	/**
 	 * If the argument can be casted as a boolean, it returns the boolean.
 	 * @param str The argument to be casted.
@@ -87,7 +91,7 @@ public class StringUtils {
 			throw new IllegalArgumentException(str + " is not a boolean.");
 		}
 	}
-	
+
 	/**
 	 * Extract the message digest from a string with the MD5 algorithm.
 	 * @param str The string from which get the digest.
@@ -102,12 +106,25 @@ public class StringUtils {
 			byte[] bytesDigest = md.digest(bytesStr);
 			return ByteUtils.toHexString(bytesDigest);
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			// Do nothing
 		} catch (NoSuchAlgorithmException e) {
-			// TODO Auto-generated catch block
+			// Do nothing
 		}
 
 		throw new RuntimeException("Couldn't extract digest from " + str + ".");
+	}
+
+	public static Timestamp toTimestamp(String str) {
+		try {
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");
+			Date parsedDate = dateFormat.parse(str);
+			Timestamp timestamp = new java.sql.Timestamp(parsedDate.getTime());
+			return timestamp;
+		} catch (ParseException e) {
+			// Error
+			return null;
+		}
+
 	}
 
 }
