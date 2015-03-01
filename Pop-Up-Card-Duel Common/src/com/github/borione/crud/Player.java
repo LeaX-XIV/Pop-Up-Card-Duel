@@ -301,7 +301,11 @@ public class Player implements Sendable {
 		sb.append(getPassword() + Consts.SEPARATOR);
 		sb.append(getName() + Consts.SEPARATOR);
 		sb.append(getMail() + Consts.SEPARATOR);
+		try {
 		sb.append(getRegistration().toString() + Consts.SEPARATOR);
+		} catch(NullPointerException e) {
+			sb.append("null" + Consts.SEPARATOR);
+		}
 		try {
 			sb.append(getLastLogin().toString() + Consts.SEPARATOR);
 		} catch(NullPointerException e) {

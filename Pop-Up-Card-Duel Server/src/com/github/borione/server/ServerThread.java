@@ -5,6 +5,12 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import com.github.borione.connection.Sendable;
+import com.github.borione.connection.TypeRequest;
+import com.github.borione.crud.Player;
+import com.github.borione.crud.management.PlayerManager;
+import com.github.borione.util.Consts;
+
 public class ServerThread extends Thread {
 
 	private Socket connection;
@@ -51,8 +57,20 @@ public class ServerThread extends Thread {
 
 	}
 
-	private String serve(String string) {
-		// TODO Auto-generated method stub
-		return string;
+	private String serve(String command) {
+		if(command.startsWith(TypeRequest.REGISTER.toString())) {
+			Player p = (Player) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
+			PlayerManager pm = new PlayerManager();
+			
+			boolean result = pm.addPlayer(p);
+			
+			if(result) {
+				return Consts.ALL_OK;
+			} else {
+				return Consts.ERROR;
+			}
+		}
+		
+		return command;
 	}
 }

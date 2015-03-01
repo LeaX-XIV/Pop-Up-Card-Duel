@@ -15,6 +15,8 @@ import javax.swing.ImageIcon;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+import com.github.borione.connection.Request;
+import com.github.borione.connection.TypeRequest;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.HintTextField;
 import com.github.borione.gui.components.ImagePanel;
@@ -40,6 +42,7 @@ import org.eclipse.wb.swing.FocusTraversalOnArray;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -415,6 +418,15 @@ public class Login extends JFrame {
 				Player p = new Player(user, StringUtils.toMD5(pass), name, email, null, null, 1);
 				
 				// TODO: Send the server a registration request
+				Request registration = new Request(TypeRequest.REGISTER, p);
+				try {
+					String answer = registration.send();
+					
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
 			}
 		});
 		btnSignUp.setIcon(new ImageIcon(Login.class.getResource("/images/signup-button.png")));
