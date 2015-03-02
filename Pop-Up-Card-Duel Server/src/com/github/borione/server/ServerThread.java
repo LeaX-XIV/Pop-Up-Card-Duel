@@ -33,22 +33,24 @@ public class ServerThread extends Thread {
 		StringBuffer command = new StringBuffer();
 
 		try {
-			while((n = input.read(buffer)) != -1) {
+			n = input.read(buffer);
+			while(n != -1) {
 				if(n > 0) {
 					// Searching termination char
 					for(i = 0; i < n; i++) {
 						if(buffer[i] == '\r' || buffer[i] == '\n') {
 							// Command set. Execute
+							System.out.println(connection.getInetAddress() + ":" + connection.getPort() + " requested: " + command.toString());
 							result = serve(command.toString());
 							output.write(result + "\r\n");
 							output.flush();
 							// Clear command
 							command = new StringBuffer();
-						}
-					}
-				} else {
+						} else {
 					character = new String(buffer, i, 1, "ISO-8859-1");
 					command.append(character);
+				}
+					}
 				}
 			}
 		} catch(IOException e) {

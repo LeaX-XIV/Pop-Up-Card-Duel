@@ -42,8 +42,8 @@ public class TcpServer extends Thread {
 				 * 
 				 */
 				
-				Thread server = new ServerThread(connection);
-				server.start();
+				Thread thread = new ServerThread(connection);
+				thread.start();
 
 			} catch(IOException e) {
 				// Do nothing

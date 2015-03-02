@@ -58,7 +58,7 @@ public class Request {
 		output.write(command + "\r\n");
 		output.flush();
 		client.setSoTimeout(1000);
-
+		
 		// Read
 		while((n = input.read(buffer)) != -1) {
 			if (n > 0) {
