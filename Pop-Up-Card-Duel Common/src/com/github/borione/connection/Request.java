@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import com.github.borione.util.Consts;
 
@@ -34,7 +35,7 @@ public class Request {
 		this.object = object;
 	}
 
-	public String send() throws IOException {
+	public String send() throws IOException, SocketTimeoutException {
 		InputStream input;
 		OutputStreamWriter output;
 
@@ -58,18 +59,12 @@ public class Request {
 		output.write(command + "\r\n");
 		output.flush();
 		client.setSoTimeout(1000);
-		
+
 		// Read
 		while((n = input.read(buffer)) != -1) {
 			if (n > 0) {
 				for(i = 0; i < n; i++) {
 					if(buffer[i] == '\r' || buffer[i] == '\n') {
-						// Received: closing connection
-						input.close();
-						output.close();
-						client.shutdownInput();
-						client.shutdownOutput();
-						client.close();
 						// Check error in answer
 						if(answer.toString().startsWith(Consts.ALL_OK)) {	// Good
 							return answer.toString();
@@ -83,13 +78,13 @@ public class Request {
 				}
 			}
 		}
-		// Error
+		
 		input.close();
 		output.close();
 		client.shutdownInput();
 		client.shutdownOutput();
 		client.close();
-
 		throw new IOException();
+
 	}
 }

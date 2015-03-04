@@ -33,8 +33,7 @@ public class ServerThread extends Thread {
 		StringBuffer command = new StringBuffer();
 
 		try {
-			n = input.read(buffer);
-			while(n != -1) {
+			while((n = input.read(buffer)) != -1) {
 				if(n > 0) {
 					// Searching termination char
 					for(i = 0; i < n; i++) {
@@ -42,14 +41,15 @@ public class ServerThread extends Thread {
 							// Command set. Execute
 							System.out.println(connection.getInetAddress() + ":" + connection.getPort() + " requested: " + command.toString());
 							result = serve(command.toString());
+							System.out.println("Sending response to " + connection.getInetAddress() + ":" + connection.getPort());
 							output.write(result + "\r\n");
 							output.flush();
 							// Clear command
 							command = new StringBuffer();
 						} else {
-					character = new String(buffer, i, 1, "ISO-8859-1");
-					command.append(character);
-				}
+							character = new String(buffer, i, 1, "ISO-8859-1");
+							command.append(character);
+						}
 					}
 				}
 			}
@@ -63,16 +63,18 @@ public class ServerThread extends Thread {
 		if(command.startsWith(TypeRequest.REGISTER.toString())) {
 			Player p = (Player) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
 			PlayerManager pm = new PlayerManager();
-			
+
 			boolean result = pm.addPlayer(p);
-			
+
 			if(result) {
-				return Consts.ALL_OK;
+				return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
 			} else {
 				return Consts.ERROR;
 			}
+//		} else if(command.startsWith(TypeRequest.LOGIN.toString();)) {
+			
 		}
-		
+
 		return command;
 	}
 }

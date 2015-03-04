@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.Date;
 
 import com.github.borione.util.Consts;
@@ -26,7 +27,7 @@ public class TcpServer extends Thread {
 	@Override
 	public void run() {
 		Socket connection = null;
-		
+
 		System.out.println("Server listening on port " + server.getLocalPort());
 
 		while(!Thread.interrupted()) {
@@ -41,21 +42,14 @@ public class TcpServer extends Thread {
 				 * 
 				 * 
 				 */
-				
+
 				Thread thread = new ServerThread(connection);
 				thread.start();
 
+			} catch(SocketTimeoutException e) {
+				// Do nothing
 			} catch(IOException e) {
 				// Do nothing
-			} finally {
-				if(connection != null) {
-					try {
-						connection.shutdownOutput();
-						connection.close();
-					} catch(IOException e) {
-						// Do nothing
-					}
-				}
 			}
 		}
 
@@ -66,7 +60,7 @@ public class TcpServer extends Thread {
 			// Do nothing
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		try {
 			TcpServer server = new TcpServer();

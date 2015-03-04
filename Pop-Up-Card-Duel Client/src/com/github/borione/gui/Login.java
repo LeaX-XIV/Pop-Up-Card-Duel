@@ -16,12 +16,14 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
 import com.github.borione.connection.Request;
+import com.github.borione.connection.Sendable;
 import com.github.borione.connection.TypeRequest;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.HintTextField;
 import com.github.borione.gui.components.ImagePanel;
 import com.github.borione.gui.components.MotionPanel;
 import com.github.borione.gui.components.ToolTip;
+import com.github.borione.util.Consts;
 import com.github.borione.util.ListUtils;
 import com.github.borione.util.StringUtils;
 
@@ -48,6 +50,33 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Login extends JFrame {
+	
+	Image background;
+	GroupLayout gl_fieldPanel;
+	
+	JPanel panel;
+	JButton button;
+	JPanel panelSignUp;
+	JPanel fieldPanel;
+	JLabel label;
+	JLabel label_1;
+	JLabel label_2;
+	JLabel label_3;
+	
+	JPanel panel_1;
+	JButton btnSignUp;
+	
+	JPanel panelLogin;
+	JPanel FieldPanel;
+	HintTextField hintTextField;
+	HintTextField hintTextField_1;
+	
+	GroupLayout gl_FieldPanel;
+	
+	JPanel panel_2;
+	JButton btnLogin;
+	JLabel lblSignUp;
+	JLabel label_4;
 
 	private JPanel contentPane;
 	private JTextField txtUsername;
@@ -88,20 +117,20 @@ public class Login extends JFrame {
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 269, 469);
-		Image background = getToolkit().createImage(getClass().getResource("/images/login-back.gif"));
+		background = getToolkit().createImage(getClass().getResource("/images/login-back.gif"));
 		contentPane = new ImagePanel(background);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		contentPane.setLayout(new BorderLayout(0, 0));
 
-		JPanel panel = new MotionPanel(this);
+		panel = new MotionPanel(this);
 		panel.setOpaque(false);
 		panel.setAlignmentX(Component.LEFT_ALIGNMENT);
 		panel.setAlignmentY(Component.TOP_ALIGNMENT);
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 
-		JButton button = new JButton("");
+		button = new JButton("");
 		button.setMinimumSize(new Dimension(30, 30));
 		button.setMaximumSize(new Dimension(30, 30));
 		button.setPreferredSize(new Dimension(30, 30));
@@ -121,12 +150,12 @@ public class Login extends JFrame {
 		button.setIcon(new ImageIcon(Login.class.getResource("/images/close.png")));
 		panel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{button}));
 
-		JPanel panelSignUp = new JPanel();
+		panelSignUp = new JPanel();
 		panelSignUp.setOpaque(false);
 		contentPane.add(panelSignUp, BorderLayout.CENTER);
 		panelSignUp.setLayout(new BorderLayout(0, 0));
 
-		JPanel fieldPanel = new JPanel();
+		fieldPanel = new JPanel();
 		fieldPanel.setOpaque(false);
 		panelSignUp.add(fieldPanel, BorderLayout.CENTER);
 
@@ -138,7 +167,7 @@ public class Login extends JFrame {
 		txtUsername.setOpaque(false);
 		txtUsername.setColumns(10);
 
-		JLabel label = new JLabel("");
+		label = new JLabel("");
 		label.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
@@ -182,7 +211,7 @@ public class Login extends JFrame {
 		txtPassword.setOpaque(false);
 		txtPassword.setColumns(10);
 
-		JLabel label_1 = new JLabel("");
+		label_1 = new JLabel("");
 		label_1.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
@@ -246,7 +275,7 @@ public class Login extends JFrame {
 		txtConfirmMail.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		txtConfirmMail.setColumns(10);
 
-		JLabel label_2 = new JLabel("");
+		label_2 = new JLabel("");
 		label_2.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseMoved(MouseEvent arg0) {
@@ -282,7 +311,7 @@ public class Login extends JFrame {
 			}
 		});
 
-		JLabel label_3 = new JLabel("");
+		label_3 = new JLabel("");
 		label_3.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
@@ -318,7 +347,7 @@ public class Login extends JFrame {
 			}
 		});
 		label_3.setIcon(new ImageIcon(Login.class.getResource("/images/help.png")));
-		GroupLayout gl_fieldPanel = new GroupLayout(fieldPanel);
+		gl_fieldPanel = new GroupLayout(fieldPanel);
 		gl_fieldPanel.setHorizontalGroup(
 				gl_fieldPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_fieldPanel.createSequentialGroup()
@@ -374,12 +403,12 @@ public class Login extends JFrame {
 		fieldPanel.setLayout(gl_fieldPanel);
 		fieldPanel.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{txtUsername, txtPassword, txtConfirmPass, txtName, txtMail, txtConfirmMail}));
 
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		panel_1.setOpaque(false);
 		panelSignUp.add(panel_1, BorderLayout.SOUTH);
 		panel_1.setLayout(new BorderLayout(0, 0));
 
-		JButton btnSignUp = new JButton("");
+		btnSignUp = new JButton("");
 		btnSignUp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
@@ -419,12 +448,22 @@ public class Login extends JFrame {
 				
 				// TODO: Send the server a registration request
 				Request registration = new Request(TypeRequest.REGISTER, p);
+				String answer = "";
 				try {
-					String answer = registration.send();
+					answer = registration.send();
 					
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				
+				if(answer.startsWith(Consts.ALL_OK)) {
+					p = (Player) Sendable.reconstruct(answer.substring(answer.indexOf(Consts.SEPARATOR) + 1));
+					
+					showLogin();
+					hintTextField.setText(p.getUser());
+					hintTextField_1.setText(p.getPassword());
+					
 				}
 				
 			}
@@ -439,30 +478,30 @@ public class Login extends JFrame {
 		panel_1.add(btnSignUp, BorderLayout.CENTER);
 		contentPane.setFocusTraversalPolicy(new FocusTraversalOnArray(new Component[]{fieldPanel, txtUsername, panel, button, panelSignUp, txtConfirmMail, txtMail, label_3, txtName, label_2, txtConfirmPass, txtPassword, label, label_1, panel_1, btnSignUp}));
 
-		JPanel panelLogin = new JPanel();
+		panelLogin = new JPanel();
 		panelLogin.setOpaque(false);
 		contentPane.add(panelLogin, BorderLayout.CENTER);
 		panelLogin.setLayout(new BorderLayout(0, 0));
 
-		JPanel FieldPanel = new JPanel();
+		FieldPanel = new JPanel();
 		FieldPanel.setOpaque(false);
 		panelLogin.add(FieldPanel, BorderLayout.CENTER);
 
-		HintTextField hintTextField = new HintTextField("Password");
+		hintTextField = new HintTextField("Password");
 		hintTextField.setOpaque(false);
 		hintTextField.setForeground(Color.WHITE);
 		hintTextField.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		hintTextField.setColumns(10);
 		hintTextField.setCaretColor(Color.BLACK);
 
-		HintTextField hintTextField_1 = new HintTextField("Username");
+		hintTextField_1 = new HintTextField("Username");
 		hintTextField_1.setToolTipText("");
 		hintTextField_1.setOpaque(false);
 		hintTextField_1.setForeground(Color.WHITE);
 		hintTextField_1.setFont(new Font("Times New Roman", Font.BOLD, 13));
 		hintTextField_1.setColumns(10);
 		hintTextField_1.setCaretColor(Color.BLACK);
-		GroupLayout gl_FieldPanel = new GroupLayout(FieldPanel);
+		gl_FieldPanel = new GroupLayout(FieldPanel);
 		gl_FieldPanel.setHorizontalGroup(
 				gl_FieldPanel.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_FieldPanel.createSequentialGroup()
@@ -483,12 +522,12 @@ public class Login extends JFrame {
 				);
 		FieldPanel.setLayout(gl_FieldPanel);
 
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		panel_2.setOpaque(false);
 		panelLogin.add(panel_2, BorderLayout.SOUTH);
 		panel_2.setLayout(new BorderLayout(0, 0));
 
-		JButton btnLogin = new JButton("");
+		btnLogin = new JButton("");
 		btnLogin.setIcon(new ImageIcon(Login.class.getResource("/images/login-button.png")));
 		btnLogin.setFocusPainted(false);
 		btnLogin.setForeground(Color.WHITE);
@@ -498,37 +537,48 @@ public class Login extends JFrame {
 		btnLogin.setBorderPainted(false);
 		panel_2.add(btnLogin);
 
-		JLabel lblSignUp = new JLabel("Sign Up");
+		lblSignUp = new JLabel("Sign Up");
 
 		lblSignUp.setForeground(Color.CYAN);
 		panel.add(lblSignUp, BorderLayout.WEST);
 
-		JLabel label_4 = new JLabel("<");
+		label_4 = new JLabel("<");
 		label_4.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				panel.remove(label_4);
-				panel.add(lblSignUp, BorderLayout.WEST);
-				contentPane.remove(panelSignUp);
-				contentPane.add(panelLogin, BorderLayout.CENTER);
-				Login.this.repaint();
-				Login.this.revalidate();
-				btnLogin.grabFocus();
+				showLogin();
 			}
 		});
 		lblSignUp.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				panel.remove(lblSignUp);
-				panel.add(label_4, BorderLayout.WEST);
-				contentPane.remove(panelLogin);
-				contentPane.add(panelSignUp, BorderLayout.CENTER);
-				Login.this.repaint();
-				Login.this.revalidate();
-				btnSignUp.grabFocus();
+				showSignUp();
 			}
 		});
+		
 		label_4.setForeground(Color.CYAN);
 		btnLogin.grabFocus();
+		
+		
+	}
+	
+	public void showLogin() {
+		panel.remove(label_4);
+		panel.add(lblSignUp, BorderLayout.WEST);
+		contentPane.remove(panelSignUp);
+		contentPane.add(panelLogin, BorderLayout.CENTER);
+		repaint();
+		revalidate();
+		btnLogin.grabFocus();
+	}
+	
+	public void showSignUp() {
+		panel.remove(lblSignUp);
+		panel.add(label_4, BorderLayout.WEST);
+		contentPane.remove(panelLogin);
+		contentPane.add(panelSignUp, BorderLayout.CENTER);
+		repaint();
+		revalidate();
+		btnSignUp.grabFocus();
 	}
 }
