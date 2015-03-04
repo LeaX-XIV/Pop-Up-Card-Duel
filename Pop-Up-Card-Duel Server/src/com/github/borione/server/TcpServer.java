@@ -1,21 +1,23 @@
 package com.github.borione.server;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import com.github.borione.crud.Player;
 import com.github.borione.util.Consts;
-import com.sun.jmx.snmp.Timestamp;
 
 public class TcpServer extends Thread {
 
 	private ServerSocket server;
+	private List<String> logged;
 
 	public TcpServer (int port) throws IOException {
+		logged = new ArrayList<String>();
 		server = new ServerSocket(port);
 		server.setSoTimeout(1000);	// 1s
 	}
@@ -36,14 +38,7 @@ public class TcpServer extends Thread {
 				connection = server.accept();
 				System.out.println(new Date().toString() + ": Request from " + connection.getInetAddress().toString() + ":" + connection.getPort());
 
-				/* TODO: DO THINGS
-				 * 
-				 * 
-				 * 
-				 * 
-				 */
-
-				Thread thread = new ServerThread(connection);
+				Thread thread = new ServerThread(connection, this);
 				thread.start();
 
 			} catch(SocketTimeoutException e) {
@@ -59,6 +54,26 @@ public class TcpServer extends Thread {
 		} catch(IOException e) {
 			// Do nothing
 		}
+	}
+	
+	public boolean login(String str) {
+		return logged.add(str);
+	}
+	
+	public boolean login(Player p) {
+		return logged.add(p.getUser());
+	}
+	
+	public void logout(String str) {
+		logged.remove(str);
+	}
+	
+	public void logout(Player p) {
+		logged.remove(p.getUser());
+	}
+	
+	public List<String> getLogged() {
+		return logged;
 	}
 
 	public static void main(String[] args) {

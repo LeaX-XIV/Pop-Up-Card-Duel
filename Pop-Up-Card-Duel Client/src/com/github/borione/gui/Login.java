@@ -446,7 +446,7 @@ public class Login extends JFrame {
 				
 				Player p = new Player(user, StringUtils.toMD5(pass), name, email, null, null, 1);
 				
-				// TODO: Send the server a registration request
+				// Send the server a registration request
 				Request registration = new Request(TypeRequest.REGISTER, p);
 				String answer = "";
 				try {
@@ -461,8 +461,7 @@ public class Login extends JFrame {
 					p = (Player) Sendable.reconstruct(answer.substring(answer.indexOf(Consts.SEPARATOR) + 1));
 					
 					showLogin();
-					hintTextField.setText(p.getUser());
-					hintTextField_1.setText(p.getPassword());
+					hintTextField_1.setText(p.getUser());
 					
 				}
 				
@@ -528,6 +527,40 @@ public class Login extends JFrame {
 		panel_2.setLayout(new BorderLayout(0, 0));
 
 		btnLogin = new JButton("");
+		btnLogin.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+				String user = hintTextField_1.getText();
+				String pass = StringUtils.toMD5(hintTextField.getText());
+				try {
+				Player p = Player.factory(user);
+				if(p.getPassword().equals(pass)) {
+					Request login = new Request(TypeRequest.LOGIN, p);
+					
+					String answer = "";
+					try {
+						answer = login.send();
+					} catch(IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					if(answer.startsWith(Consts.ALL_OK)) {
+						p = (Player) Sendable.reconstruct(answer.substring(answer.indexOf(Consts.SEPARATOR) + 1));
+						// TODO: CREATE NEW FRAME WITH BASIC FUNCTIONS(logout, collection manager, quick play)
+						System.out.println("You logged in as" + p.getUser());						
+					}
+					
+				} else {
+					JOptionPane.showMessageDialog(null, "Your datas are wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+				
+				} catch(IllegalArgumentException e) {
+					JOptionPane.showMessageDialog(null, "Your datas are wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 		btnLogin.setIcon(new ImageIcon(Login.class.getResource("/images/login-button.png")));
 		btnLogin.setFocusPainted(false);
 		btnLogin.setForeground(Color.WHITE);
