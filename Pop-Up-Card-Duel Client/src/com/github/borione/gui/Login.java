@@ -462,6 +462,7 @@ public class Login extends JFrame {
 					
 					showLogin();
 					hintTextField_1.setText(p.getUser());
+					hintTextField.grabFocus();
 					
 				}
 				
@@ -557,6 +558,8 @@ public class Login extends JFrame {
 				}
 				
 				} catch(IllegalArgumentException e) {
+					JOptionPane.showMessageDialog(null, "Your datas are wrong.", "Error", JOptionPane.ERROR_MESSAGE);
+				} catch(NullPointerException e) {
 					JOptionPane.showMessageDialog(null, "Your datas are wrong.", "Error", JOptionPane.ERROR_MESSAGE);
 				}
 			}

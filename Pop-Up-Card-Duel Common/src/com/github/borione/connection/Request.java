@@ -67,12 +67,16 @@ public class Request {
 					if(buffer[i] == '\r' || buffer[i] == '\n') {
 						// Check error in answer
 						if(answer.toString().startsWith(Consts.ALL_OK)) {	// Good
-							return answer.toString();
+							// XXX: Cose brutte
+							return answer.toString().replace("Â", "");
 						} else {	// Something went wrong
 							throw new IOException(answer.toString());
 						}
 					} else {	// Reading answer char by char
 						character = new String(buffer, i, 1, "ISO-8859-1");
+						if(character.toCharArray()[0] == (char) 189) {
+							continue;
+						}
 						answer.append(character);
 					}
 				}
