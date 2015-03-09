@@ -13,17 +13,29 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 
+import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Player;
+import com.github.borione.util.Consts;
 import com.github.borione.util.ImageUtils;
 
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Image;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.Font;
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 
-public class MainMenu extends JPanel {
+import javax.swing.SwingConstants;
 
+public class MainMenu extends JPanel implements ComponentListener {
+
+	Player p;
+	
 	GroupLayout groupLayout;
 
 	JLabel lblPhoto;
@@ -35,20 +47,22 @@ public class MainMenu extends JPanel {
 
 	public static void main(String[] args) {
 		JFrame m = new JFrame();
-		MainMenu m1 = new MainMenu(Player.factory("LeaX_XIV"));
+		MainMenu m1 = new MainMenu(Player.factory("CapraTheBest"));
 		m.setUndecorated(true);
 		m.setContentPane(m1);
-		m.pack();
 		m.setExtendedState(m.getExtendedState() | JFrame.MAXIMIZED_BOTH);
 		m.setResizable(false);
 		m.setVisible(true);
-		m1.setProfilePhoto("C:\\Users\\Quarta\\Desktop\\sentiero montano.jpg");
 	}
 
 	/**
 	 * Create the panel.
 	 */
 	public MainMenu(Player p) {
+		this.p = p;
+		
+		this.addComponentListener(this);
+		
 		setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		lblPhoto = new JLabel("photo");
@@ -58,6 +72,8 @@ public class MainMenu extends JPanel {
 		lblPhoto.setPreferredSize(new Dimension(100, 100));
 
 		lblName = new JLabel(p.getName());
+		lblName.setHorizontalAlignment(SwingConstants.CENTER);
+		lblName.setFont(new Font("Bleeding Cowboys", Font.PLAIN, 6));
 		lblName.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblName.setMaximumSize(new Dimension(400, 50));
 		lblName.setPreferredSize(new Dimension(100, 20));
@@ -149,5 +165,51 @@ public class MainMenu extends JPanel {
 		img = ImageUtils.resizeBetter(img, lblPhoto.getWidth(), lblPhoto.getHeight());
 
 		lblPhoto.setIcon(new ImageIcon(img));
+	}
+	
+	public void fitNameFont() {
+		Font labelFont = lblName.getFont();
+		String labelText = lblName.getText();
+
+		int stringWidth = lblName.getFontMetrics(labelFont).stringWidth(labelText);
+		int componentWidth = lblName.getWidth();
+
+		// Find out how much the font can grow in width.
+		double widthRatio = (double)componentWidth / (double)stringWidth;
+
+		int newFontSize = (int)(labelFont.getSize() * widthRatio);
+		int componentHeight = lblName.getHeight();
+
+		// Pick a new font size so it will not be larger than the height of label.
+		int fontSizeToUse = Math.min(newFontSize, componentHeight);
+
+		// Set the label's font size to the newly determined size.
+		lblName.setFont(new Font(labelFont.getName(), Font.PLAIN, fontSizeToUse));
+	}
+	
+	@Override
+	public void componentResized(ComponentEvent e) {
+		try {
+			setProfilePhoto(ImageUtils.getImageFromWeb("http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + Avatar.factory(p.getAvatar()).getPath()));
+		} catch (IllegalArgumentException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		fitNameFont();
+    }
+
+	@Override
+	public void componentHidden(ComponentEvent e) {
+	}
+
+	@Override
+	public void componentMoved(ComponentEvent e) {
+	}
+
+	@Override
+	public void componentShown(ComponentEvent e) {
 	}
 }
