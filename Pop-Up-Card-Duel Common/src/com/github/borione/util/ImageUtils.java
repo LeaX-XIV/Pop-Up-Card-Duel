@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -197,17 +198,8 @@ public class ImageUtils {
 
 	public static Image getImageFromWeb(String imageUrl) throws IOException {
 		URL url = new URL(imageUrl);
-		InputStream is = url.openStream();
 
-		byte[] b = new byte[2048];
-
-		while (is.read(b) != -1) {
-			// Do nothing
-		}
-
-		is.close();
-
-		return ImageIO.read(new ByteArrayInputStream(b));
+		return ImageIO.read(url);
 	}
 
 }

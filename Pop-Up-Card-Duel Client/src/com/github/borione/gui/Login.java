@@ -550,7 +550,9 @@ public class Login extends JFrame {
 					if(answer.startsWith(Consts.ALL_OK)) {
 						p = (Player) Sendable.reconstruct(answer.substring(answer.indexOf(Consts.SEPARATOR) + 1));
 						// TODO: CREATE NEW FRAME WITH BASIC FUNCTIONS(logout, collection manager, quick play)
-						System.out.println("You logged in as" + p.getUser());						
+						System.out.println("You logged in as " + p.getUser());
+						dispose();
+						MainMenu.main(new String[] {p.getUser()});
 					}
 					
 				} else {

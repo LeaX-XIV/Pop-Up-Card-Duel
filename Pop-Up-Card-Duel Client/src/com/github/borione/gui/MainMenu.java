@@ -47,7 +47,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 
 	public static void main(String[] args) {
 		JFrame m = new JFrame();
-		MainMenu m1 = new MainMenu(Player.factory("CapraTheBest"));
+		MainMenu m1 = new MainMenu(Player.factory(args[0]));
 		m.setUndecorated(true);
 		m.setContentPane(m1);
 		m.setExtendedState(m.getExtendedState() | JFrame.MAXIMIZED_BOTH);
@@ -79,6 +79,12 @@ public class MainMenu extends JPanel implements ComponentListener {
 		lblName.setPreferredSize(new Dimension(100, 20));
 
 		btnQuickBattle = new JButton("quick battle");
+		btnQuickBattle.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				
+			}
+		});
 		btnQuickBattle.setFocusPainted(false);
 
 		btnCollectionManager = new JButton("Collection Manager");
@@ -189,6 +195,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 	
 	@Override
 	public void componentResized(ComponentEvent e) {
+		fitNameFont();
 		try {
 			setProfilePhoto(ImageUtils.getImageFromWeb("http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + Avatar.factory(p.getAvatar()).getPath()));
 		} catch (IllegalArgumentException e1) {
@@ -198,7 +205,6 @@ public class MainMenu extends JPanel implements ComponentListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		fitNameFont();
     }
 
 	@Override
