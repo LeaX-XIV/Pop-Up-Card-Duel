@@ -23,14 +23,6 @@ enum Rarity {
 	SSSSS
 }
 
-enum CardColor {
-	RED,
-	GREEN,
-	BLUE,
-	YELLOW,
-	GRAY
-}
-
 public class Card implements Sendable {
 	
 	private int id;

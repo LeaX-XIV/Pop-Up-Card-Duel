@@ -19,6 +19,7 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
+import javax.swing.JInternalFrame;
 
 public class DeckSelect extends JFrame {
 
@@ -107,10 +108,8 @@ public class DeckSelect extends JFrame {
 		btnNext.setOpaque(false);
 		panel_3.add(btnNext);
 		
-		JList list = new JList();
-		list.setVisibleRowCount(3);
-		list.setOpaque(false);
-		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		panel_1.add(list, BorderLayout.CENTER);
+		JPanel panel_4 = new JPanel();
+		panel_1.add(panel_4, BorderLayout.CENTER);
+		panel_4.setLayout(null);
 	}
 }

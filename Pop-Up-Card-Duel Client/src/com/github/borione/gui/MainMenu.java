@@ -26,9 +26,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
-import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 
 import javax.swing.SwingConstants;
 
