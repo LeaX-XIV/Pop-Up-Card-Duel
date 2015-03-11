@@ -12,18 +12,40 @@ import java.awt.Dimension;
 
 import javax.swing.ImageIcon;
 
+import com.github.borione.crud.Deck;
+import com.github.borione.crud.Player;
+import com.github.borione.gui.components.DeckDescription;
 import com.github.borione.gui.components.MotionPanel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+
 import javax.swing.JLabel;
+
 import java.awt.FlowLayout;
+import java.util.List;
+
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JInternalFrame;
+import java.awt.GridLayout;
 
 public class DeckSelect extends JFrame {
 
 	private JPanel contentPane;
+	
+	JPanel panel;
+	JButton btnClose;
+	JPanel panel_2;
+	JButton btnChoose;
+	JPanel panel_1;
+	JPanel panel_3;
+	JButton btnPrevious;
+	JLabel lblPagine;
+	JButton btnNext;
+	JPanel panel_4;
+	
+	Player p;
 
 	/**
 	 * Launch the application.
@@ -32,7 +54,7 @@ public class DeckSelect extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DeckSelect frame = new DeckSelect();
+					DeckSelect frame = new DeckSelect(Player.factory("LeaX_XIV"));
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +66,9 @@ public class DeckSelect extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public DeckSelect() {
+	public DeckSelect(Player p) {
+		this.p = p;
+		
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 629, 478);
@@ -53,11 +77,11 @@ public class DeckSelect extends JFrame {
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
 		
-		JPanel panel = new MotionPanel(this);
+		panel = new MotionPanel(this);
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnClose = new JButton("");
+		btnClose = new JButton("");
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -74,22 +98,22 @@ public class DeckSelect extends JFrame {
 		btnClose.setSize(new Dimension(30, 30));
 		panel.add(btnClose, BorderLayout.EAST);
 		
-		JPanel panel_2 = new JPanel();
+		panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
 		flowLayout.setAlignment(FlowLayout.TRAILING);
 		
-		JButton btnChoose = new JButton("Choose");
+		btnChoose = new JButton("Choose");
 		panel_2.add(btnChoose);
 		
-		JPanel panel_1 = new JPanel();
+		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel_3 = new JPanel();
+		panel_3 = new JPanel();
 		panel_1.add(panel_3, BorderLayout.SOUTH);
 		
-		JButton btnPrevious = new JButton("");
+		btnPrevious = new JButton("");
 		btnPrevious.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/left_arrow.png")));
 		btnPrevious.setOpaque(false);
 		btnPrevious.setFocusPainted(false);
@@ -97,10 +121,10 @@ public class DeckSelect extends JFrame {
 		btnPrevious.setBorderPainted(false);
 		panel_3.add(btnPrevious);
 		
-		JLabel lblPagine = new JLabel("pagine");
+		lblPagine = new JLabel("pagine");
 		panel_3.add(lblPagine);
 		
-		JButton btnNext = new JButton("");
+		btnNext = new JButton("");
 		btnNext.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/right_arrow.png")));
 		btnNext.setContentAreaFilled(false);
 		btnNext.setFocusPainted(false);
@@ -108,8 +132,19 @@ public class DeckSelect extends JFrame {
 		btnNext.setOpaque(false);
 		panel_3.add(btnNext);
 		
-		JPanel panel_4 = new JPanel();
+		panel_4 = new JPanel();
 		panel_1.add(panel_4, BorderLayout.CENTER);
-		panel_4.setLayout(null);
+		panel_4.setLayout(new GridLayout(2, 0, 0, 0));
+		
+		populateList();
+	}
+	
+	public void populateList() {
+		List<Deck> decks = p.retriveDecks();
+		
+		for (int i = 0; i< decks.size(); i++) {
+			Deck deck = decks.get(i);
+			panel_4.add(new DeckDescription(deck, i+1));
+		}
 	}
 }
