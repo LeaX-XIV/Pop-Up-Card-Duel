@@ -30,8 +30,10 @@ public class DeckDescription extends JPanel {
 	
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
-		f.setContentPane(new DeckDescription(Deck.factory(2), 1));
+		f.setContentPane(new DeckDescription(Deck.factory(1), 1));
 		f.setVisible(true);
+		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		f.pack();
 	}
 
 	/**
@@ -56,7 +58,7 @@ public class DeckDescription extends JPanel {
 		
 		panel_2 = new JPanel();
 		panel_1.add(panel_2);
-		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 5, 5));
+		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 2, 0));
 		
 		lblNumber = new JLabel("" + number);
 		lblNumber.setFont(new Font("Tahoma", Font.PLAIN, 52));
