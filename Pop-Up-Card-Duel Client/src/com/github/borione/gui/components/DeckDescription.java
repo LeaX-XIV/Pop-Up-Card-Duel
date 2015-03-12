@@ -61,7 +61,7 @@ public class DeckDescription extends JPanel {
 		panel_2.setLayout(new FlowLayout(FlowLayout.LEADING, 2, 0));
 		
 		lblNumber = new JLabel("" + number);
-		lblNumber.setFont(new Font("Tahoma", Font.PLAIN, 52));
+		lblNumber.setFont(new Font("Tahoma", Font.PLAIN, 45));
 		add(lblNumber, BorderLayout.WEST);
 		
 		populateCrystals(d);

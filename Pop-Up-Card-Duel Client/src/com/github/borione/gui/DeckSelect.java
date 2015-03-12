@@ -29,11 +29,12 @@ import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JInternalFrame;
 import java.awt.GridLayout;
+import javax.swing.JLayeredPane;
 
 public class DeckSelect extends JFrame {
 
 	private JPanel contentPane;
-	
+
 	JPanel panel;
 	JButton btnClose;
 	JPanel panel_2;
@@ -43,9 +44,9 @@ public class DeckSelect extends JFrame {
 	JButton btnPrevious;
 	JLabel lblPagine;
 	JButton btnNext;
-	JPanel panel_4;
-	
+
 	Player p;
+	private JLayeredPane layeredPane;
 
 	/**
 	 * Launch the application.
@@ -68,7 +69,7 @@ public class DeckSelect extends JFrame {
 	 */
 	public DeckSelect(Player p) {
 		this.p = p;
-		
+
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 629, 478);
@@ -76,11 +77,11 @@ public class DeckSelect extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		contentPane.setLayout(new BorderLayout(0, 0));
 		setContentPane(contentPane);
-		
+
 		panel = new MotionPanel(this);
 		contentPane.add(panel, BorderLayout.NORTH);
 		panel.setLayout(new BorderLayout(0, 0));
-		
+
 		btnClose = new JButton("");
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
@@ -97,22 +98,22 @@ public class DeckSelect extends JFrame {
 		btnClose.setPreferredSize(new Dimension(30, 30));
 		btnClose.setSize(new Dimension(30, 30));
 		panel.add(btnClose, BorderLayout.EAST);
-		
+
 		panel_2 = new JPanel();
 		contentPane.add(panel_2, BorderLayout.SOUTH);
 		FlowLayout flowLayout = (FlowLayout) panel_2.getLayout();
 		flowLayout.setAlignment(FlowLayout.TRAILING);
-		
+
 		btnChoose = new JButton("Choose");
 		panel_2.add(btnChoose);
-		
+
 		panel_1 = new JPanel();
 		contentPane.add(panel_1, BorderLayout.CENTER);
 		panel_1.setLayout(new BorderLayout(0, 0));
-		
+
 		panel_3 = new JPanel();
 		panel_1.add(panel_3, BorderLayout.SOUTH);
-		
+
 		btnPrevious = new JButton("");
 		btnPrevious.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/left_arrow.png")));
 		btnPrevious.setOpaque(false);
@@ -120,10 +121,10 @@ public class DeckSelect extends JFrame {
 		btnPrevious.setContentAreaFilled(false);
 		btnPrevious.setBorderPainted(false);
 		panel_3.add(btnPrevious);
-		
+
 		lblPagine = new JLabel("pagine");
 		panel_3.add(lblPagine);
-		
+
 		btnNext = new JButton("");
 		btnNext.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/right_arrow.png")));
 		btnNext.setContentAreaFilled(false);
@@ -131,20 +132,20 @@ public class DeckSelect extends JFrame {
 		btnNext.setBorderPainted(false);
 		btnNext.setOpaque(false);
 		panel_3.add(btnNext);
-		
-		panel_4 = new JPanel();
-		panel_1.add(panel_4, BorderLayout.CENTER);
-		panel_4.setLayout(new GridLayout(2, 0, 0, 0));
-		
+
+		layeredPane = new JLayeredPane();
+		panel_1.add(layeredPane, BorderLayout.CENTER);
+		layeredPane.setLayout(new BorderLayout(0, 0));
+
 		populateList();
 	}
-	
+
+	// FIXME: BOOM
 	public void populateList() {
 		List<Deck> decks = p.retriveDecks();
-		
-		for (int i = 0; i< decks.size(); i++) {
+		for(int i = 0; i< decks.size(); i++) {
 			Deck deck = decks.get(i);
-			panel_4.add(new DeckDescription(deck, i+1));
+			layeredPane.add(new DeckDescription(deck, i+1), (i%2 == 0? BorderLayout.NORTH : BorderLayout.SOUTH));
 		}
 	}
 }
