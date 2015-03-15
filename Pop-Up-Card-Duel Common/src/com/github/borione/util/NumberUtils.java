@@ -49,5 +49,24 @@ public class NumberUtils {
 		
 		return min(ns);
 	}
+	
+	public static String toNumDigits(int num, int digits) {
+		if(num < 0) {
+			return "" + num;
+		}
+		
+		String number = "" + num;
+		int length = number.length();
+		
+		StringBuilder sb = new StringBuilder(digits);
+		
+		for(int i = length; i < digits; i++) {
+			sb.append("0");
+		}
+		
+		sb.append(number);
+		
+		return sb.toString();
+	}
 
 }

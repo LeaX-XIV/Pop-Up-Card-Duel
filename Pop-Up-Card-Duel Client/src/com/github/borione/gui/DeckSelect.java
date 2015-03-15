@@ -56,7 +56,6 @@ public class DeckSelect extends JFrame {
 			public void run() {
 				try {
 					DeckSelect frame = new DeckSelect(Player.factory("LeaX_XIV"));
-					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -68,10 +67,12 @@ public class DeckSelect extends JFrame {
 	 * Create the frame.
 	 */
 	public DeckSelect(Player p) {
+		setVisible(true);
+		setResizable(false);
 		this.p = p;
 
 		setUndecorated(true);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 629, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));

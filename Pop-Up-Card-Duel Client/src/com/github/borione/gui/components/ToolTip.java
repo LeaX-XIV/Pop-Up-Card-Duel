@@ -17,7 +17,6 @@ public class ToolTip extends JFrame {
 	
 	public ToolTip(String tip) {
 		setType(Type.UTILITY);
-		setBackground(Color.WHITE);
 		setResizable(false);
 				
 		setUndecorated(true);

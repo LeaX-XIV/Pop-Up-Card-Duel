@@ -5,6 +5,9 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
+import javax.swing.ScrollPaneLayout;
 
 import java.awt.Dimension;
 
@@ -14,12 +17,16 @@ import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 
 import com.github.borione.crud.Avatar;
+import com.github.borione.crud.Card;
 import com.github.borione.crud.Player;
+import com.github.borione.gui.components.CardDrawn;
+import com.github.borione.gui.components.Loading;
 import com.github.borione.util.Consts;
 import com.github.borione.util.ImageUtils;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
@@ -80,12 +87,33 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnQuickBattle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				
+				Loading l = new Loading("Loading. Please wait.");
+				new DeckSelect(p);
+				l.stop();
 			}
 		});
 		btnQuickBattle.setFocusPainted(false);
 
 		btnCollectionManager = new JButton("Collection Manager");
+		btnCollectionManager.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// JUST A TRY
+				JFrame f = new JFrame();
+				JPanel p = new JPanel();
+				f.setContentPane(p);
+				JPanel p1 = new JPanel(new GridLayout(0, 4, 10, 15));
+				for(Card c : MainMenu.this.p.retriveCollection()) {
+					p1.add(new CardDrawn(c));
+				}
+				JScrollPane sp = new JScrollPane(p1);
+				// DOESN?T SHOW SCROLLBAR
+				sp.createVerticalScrollBar();
+				p.add(sp);
+				f.setBounds(100, 100, 700, 500);
+				f.setVisible(true);
+			}
+		});
 		btnCollectionManager.setFocusPainted(false);
 		btnCollectionManager.setPreferredSize(new Dimension(87, 23));
 
