@@ -22,6 +22,7 @@ import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
 import com.github.borione.gui.components.Loading;
 import com.github.borione.util.Consts;
+import com.github.borione.util.FontUtils;
 import com.github.borione.util.ImageUtils;
 
 import java.awt.Color;
@@ -199,29 +200,9 @@ public class MainMenu extends JPanel implements ComponentListener {
 		lblPhoto.setIcon(new ImageIcon(img));
 	}
 	
-	public void fitNameFont() {
-		Font labelFont = lblName.getFont();
-		String labelText = lblName.getText();
-
-		int stringWidth = lblName.getFontMetrics(labelFont).stringWidth(labelText);
-		int componentWidth = lblName.getWidth();
-
-		// Find out how much the font can grow in width.
-		double widthRatio = (double)componentWidth / (double)stringWidth;
-
-		int newFontSize = (int)(labelFont.getSize() * widthRatio);
-		int componentHeight = lblName.getHeight();
-
-		// Pick a new font size so it will not be larger than the height of label.
-		int fontSizeToUse = Math.min(newFontSize, componentHeight);
-
-		// Set the label's font size to the newly determined size.
-		lblName.setFont(new Font(labelFont.getName(), Font.PLAIN, fontSizeToUse));
-	}
-	
 	@Override
 	public void componentResized(ComponentEvent e) {
-		fitNameFont();
+		FontUtils.fitNameFont(lblName);
 		try {
 			setProfilePhoto(ImageUtils.getImageFromWeb("http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + Avatar.factory(p.getAvatar()).getPath()));
 		} catch (IllegalArgumentException e1) {
