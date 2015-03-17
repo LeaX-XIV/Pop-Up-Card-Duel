@@ -1,6 +1,10 @@
 package com.github.borione.util;
 
 import java.awt.Font;
+import java.awt.FontFormatException;
+import java.awt.GraphicsEnvironment;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.JLabel;
 
@@ -24,5 +28,18 @@ public class FontUtils {
 
 		// Set the label's font size to the newly determined size.
 		lbl.setFont(new Font(labelFont.getName(), Font.PLAIN, fontSizeToUse));
+	}
+	
+	public static Font registerFont(String fileName) {
+		try {
+		     GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+		     ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, new File(fileName)));
+		} catch (IOException|FontFormatException e) {
+		     //Handle exception
+		}
+		
+		Font f = new Font("card_font", Font.PLAIN, 12);
+		
+		return f;
 	}
 }

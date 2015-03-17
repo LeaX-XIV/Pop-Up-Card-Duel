@@ -6,55 +6,45 @@ import java.sql.Statement;
 
 import com.github.borione.connection.ConnectionTest;
 
-enum Color {
-	RED,
-	GREEN,
-	BLUE,
-	YELLOW
-};
 
 public class CpCost {
 	
-	private int effect;
+	private int card;
 	private Color cp;
 	private int cost;
 	
-	public CpCost(int effect, Color cp, int cost) {
-		setEffect(effect);
+	public CpCost(int card, Color cp, int cost) {
+		setCard(card);
 		setCp(cp);
 		setCost(cost);
 	}
 	
-	public static CpCost factory(int effect, Color cp) {
+	public static CpCost factory(int card, Color cp) {
 		CpCost cpCost = null;
 		try {
 			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
-			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE effect = " + effect + " AND cp = '" + cp + "';");
+			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE card = " + card + " AND cp = '" + cp + "';");
 			if(rs.next()) {
 				int cost = rs.getInt("cost");
 				
-				cpCost = new CpCost(effect, cp, cost);
+				cpCost = new CpCost(card, cp, cost);
 			}
 			rs.close();
 			stat.close();
 			ct.closeConnection();
 			return cpCost;
 		} catch (SQLException e) {
-			throw new IllegalArgumentException("No cpCost was found from effect " + effect + " being color " + cp);
+			throw new IllegalArgumentException("No cpCost was found from card " + card + " being color " + cp);
 		}
 	}
 
-	public int getEffect() {
-		return effect;
-	}
-	
-	public String getEffectName() {
-		return Effect.factory(getEffect()).getName();
+	public int getCard() {
+		return card;
 	}
 
-	public void setEffect(int effect) {
-		this.effect = effect;
+	public void setCard(int card) {
+		this.card = card;
 	}
 
 	public Color getCp() {
@@ -76,7 +66,7 @@ public class CpCost {
 	@Override
 	public String toString() {
 		StringBuffer sb = new StringBuffer();
-		sb.append("Effect: " + getEffectName() +
+		sb.append("Card: " + getCard() +
 				"\nCP: " + getCp() +
 				"\nCost: " + getCost());
 		return sb.toString();
@@ -88,7 +78,7 @@ public class CpCost {
 		
 		if (o instanceof CpCost) {
 			CpCost cpCost = (CpCost) o;
-			if(getEffect() == cpCost.getEffect() &&
+			if(getCard() == cpCost.getCard() &&
 					getCp().equals(cpCost.getCp()) &&
 					getCost() == cpCost.getCost()) {
 				equals = true;

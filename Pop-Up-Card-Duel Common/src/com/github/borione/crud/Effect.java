@@ -14,11 +14,15 @@ public class Effect {
 	private int id;
 	private String name;
 	private String description;
+	private Integer damage;
+	private Integer rebound;
 
-	public Effect(int id, String name, String description) {
+	public Effect(int id, String name, String description, Integer damage, Integer rebound) {
 		setId(id);
 		setName(name);
 		setDescription(description);
+		setDamage(damage);
+		setRebound(rebound);
 	}
 
 	public static Effect factory(int id) {
@@ -30,8 +34,10 @@ public class Effect {
 			if(rs.next()) {
 				String name = rs.getString("name");
 				String description = rs.getString("description");
+				Integer damage = rs.getInt("damage");
+				Integer rebound = rs.getInt("rebound");
 
-				effect = new Effect(id, name, description);
+				effect = new Effect(id, name, description, damage, rebound);
 			}
 			rs.close();
 			stat.close();
@@ -64,6 +70,22 @@ public class Effect {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	public Integer getDamage() {
+		return damage;
+	}
+
+	public void setDamage(Integer damage) {
+		this.damage = damage;
+	}
+	
+	public Integer getRebound() {
+		return rebound;
+	}
+
+	public void setRebound(Integer rebound) {
+		this.rebound = rebound;
 	}
 
 	public List<CpCost> retriveCpCost() {
@@ -101,7 +123,8 @@ public class Effect {
 		sb.append("Id: " + getId() +
 				"\nName: " + getName() +
 				"\nDescription: " + getDescription() +
-				"\nCost: " + getCpCost());
+				"\nDamage: " + getDamage() +
+				"\nRebound: " + getRebound());
 		return sb.toString();
 	}
 	
@@ -114,7 +137,9 @@ public class Effect {
 			
 			if(getId() == effect.getId() &&
 					getName().equals(effect.getName()) &&
-					getDescription().equals(effect.getDescription())) {
+					getDescription().equals(effect.getDescription()) &&
+					getDamage().equals(effect.getDamage()) &&
+					getRebound().equals(effect.getRebound())) {
 				equals = true;
 			}			
 		}
@@ -123,6 +148,6 @@ public class Effect {
 	}
 	
 	public static void main(String[] args) {
-		System.out.println(Effect.factory(1));
+		System.out.println(Effect.factory(2));
 	}
 }

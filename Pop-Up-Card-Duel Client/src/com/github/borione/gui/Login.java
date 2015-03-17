@@ -98,8 +98,7 @@ public class Login extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					Login frame = new Login();
-					frame.setVisible(true);
+					new Login();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -597,7 +596,7 @@ public class Login extends JFrame {
 		label_4.setForeground(Color.CYAN);
 		btnLogin.grabFocus();
 		
-		
+		setVisible(true);
 	}
 	
 	public void showLogin() {
