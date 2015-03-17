@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JLabel;
+import javax.swing.JTextArea;
 
 public class FontUtils {
 
@@ -28,6 +29,26 @@ public class FontUtils {
 
 		// Set the label's font size to the newly determined size.
 		lbl.setFont(new Font(labelFont.getName(), Font.PLAIN, fontSizeToUse));
+	}
+	
+	public static void fitNameFont(JTextArea txtArea) {
+		Font txtFont = txtArea.getFont();
+		String txtText = txtArea.getText();
+
+		int stringWidth = txtArea.getFontMetrics(txtFont).stringWidth(txtText);
+		int componentWidth = txtArea.getWidth();
+
+		// Find out how much the font can grow in width.
+		double widthRatio = (double)componentWidth / (double)stringWidth;
+
+		int newFontSize = (int)(txtFont.getSize() * widthRatio);
+		int componentHeight = txtArea.getHeight();
+
+		// Pick a new font size so it will not be larger than the height of label.
+		int fontSizeToUse = Math.min(newFontSize, componentHeight);
+
+		// Set the label's font size to the newly determined size.
+		txtArea.setFont(new Font(txtFont.getName(), Font.PLAIN, fontSizeToUse));
 	}
 	
 	public static Font registerFont(String fileName) {

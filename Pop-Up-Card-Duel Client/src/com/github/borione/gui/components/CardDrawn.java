@@ -1,11 +1,13 @@
 package com.github.borione.gui.components;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import com.github.borione.crud.Card;
 import com.github.borione.main.Main;
@@ -17,6 +19,7 @@ import com.github.borione.util.StringUtils;
 import java.awt.Dimension;
 
 import javax.swing.SwingConstants;
+import java.awt.Font;
 
 public class CardDrawn extends ImagePanel {
 	
@@ -25,11 +28,12 @@ public class CardDrawn extends ImagePanel {
 	private Image background;
 	private JLabel esper;
 	private JLabel attack;
-	private JLabel description;
+	private JTextArea description;
 	
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		f.setUndecorated(true);
+		f.setVisible(true);
 		f.setContentPane(new CardDrawn(Card.factory(6)));
 		f.setBounds(100, 100, 128, 192);
 		f.setBackground(new Color(0, 255, 0, 0));
@@ -73,9 +77,18 @@ public class CardDrawn extends ImagePanel {
 		FontUtils.fitNameFont(attack);
 		add(attack);
 		
-		description = new JLabel(ListUtils.toString(c.retriveCpCost(), "\n\n"));
-		description.setBounds(20, 107, 85, 53);
+		description = new JTextArea(ListUtils.toString(c.retriveCpCost(), "\n\n") + "\n\n" +  c.retrievePrimaryEffect());
+		description.setOpaque(false);
+		// FOXME: FONT SIZE
+//		description.setFont(new Font("Monospaced", Font.BOLD, 10));
 		FontUtils.fitNameFont(description);
+		description.setSelectionColor(Color.WHITE);
+		description.setSelectedTextColor(Color.BLACK);
+		description.setEditable(false);
+		description.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		description.setAutoscrolls(false);
+		description.setBounds(20, 107, 85, 53);
+		description.setBackground(new Color(0, 255, 0, 0));
 		add(description);
 	}
 	

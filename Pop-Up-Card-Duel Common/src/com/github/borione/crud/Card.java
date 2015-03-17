@@ -145,6 +145,23 @@ public class Card implements Sendable {
 
 		return actions;
 	}
+	
+	public Effect retrievePrimaryEffect() {
+		Effect effect = null;
+
+		try {
+			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			Statement stat = ct.getConnection().createStatement();
+			ResultSet rs = stat.executeQuery("SELECT effect FROM effect_card WHERE card = '" + getId() + "' AND importance = 'PRIMARY';");
+
+			rs.next();
+				effect = Effect.factory(rs.getInt("effect"));
+		} catch(SQLException e) {
+			throw new RuntimeException("An error occurred while fetching data from the db.");
+		}
+
+		return effect;
+	}
 
 	@Override
 	public String toString() {
