@@ -155,9 +155,9 @@ public class Card implements Sendable {
 			ResultSet rs = stat.executeQuery("SELECT effect FROM effect_card WHERE card = '" + getId() + "' AND importance = 'PRIMARY';");
 
 			rs.next();
-				effect = Effect.factory(rs.getInt("effect"));
+			effect = Effect.factory(rs.getInt("effect"));
 		} catch(SQLException e) {
-			throw new RuntimeException("An error occurred while fetching data from the db.");
+			return null;
 		}
 
 		return effect;

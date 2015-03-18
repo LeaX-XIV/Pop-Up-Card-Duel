@@ -101,7 +101,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 				JFrame f = new JFrame();
 				JPanel p = new JPanel();
 				f.setContentPane(p);
-				JPanel p1 = new JPanel(new GridLayout(0, 4, 10, 15));
+				JPanel p1 = new JPanel(new GridLayout(0, 2, 10, 15));
 				for(Card c : MainMenu.this.p.retriveCollection()) {
 					p1.add(new CardDrawn(c));
 				}

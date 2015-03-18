@@ -20,6 +20,8 @@ import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.Icon;
 
+import net.coobird.thumbnailator.Thumbnails;
+
 public class ImageUtils {
 
 	/**
@@ -174,14 +176,34 @@ public class ImageUtils {
 
 		return combined;
 	}
+	
+	public static BufferedImage resize(BufferedImage img, int newW, int newH) { 
+	    Image tmp = img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH);
+	    BufferedImage dimg = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
 
-	public static BufferedImage resize(Image original, int width, int height) {
-		BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-		Graphics2D g = resizedImage.createGraphics();
-		g.drawImage((Image) original, 0, 0, width, height, null);
-		g.dispose();
-		return resizedImage;
+	    Graphics2D g2d = dimg.createGraphics();
+	    g2d.drawImage(tmp, 0, 0, null);
+	    g2d.dispose();
+
+	    return dimg;
 	}
+	
+	public static BufferedImage resiz(BufferedImage img, int newW, int newH) {
+		  try {
+			return Thumbnails.of(img).forceSize(newW, newH).asBufferedImage();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return img;
+		}
+	}
+//	public static BufferedImage resize(Image original, int width, int height) {
+//		BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+//		Graphics2D g = resizedImage.createGraphics();
+//		g.drawImage((Image) original, 0, 0, width, height, null);
+//		g.dispose();
+//		return resizedImage;
+//	}
 
 	public static BufferedImage resizeBetter(Image original, int width, int height) {
 		BufferedImage resizedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);

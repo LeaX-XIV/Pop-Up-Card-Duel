@@ -77,18 +77,21 @@ public class ServerThread extends Thread {
 			}
 		} else if(command.startsWith(TypeRequest.LOGIN.toString())) {
 			Player p = (Player) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
-			p.setLastLogin(new Timestamp(new Date().getTime()));
-			PlayerManager pm = new PlayerManager();
-			
-			boolean result = pm.updatePlayer(p);
+			if(parent.getLogged().contains(p)) {
+				
+				p.setLastLogin(new Timestamp(new Date().getTime()));
+				PlayerManager pm = new PlayerManager();
 
-			if(result) {
-				parent.login(p.getUser());
-				System.out.println(new Date().toString() + ": " + p.getName() + " logged in.");
-				System.out.println("Online players: " + parent.getLogged().toString());
-				return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
-			} else {
-				return Consts.ERROR + Consts.SEPARATOR + command;
+				boolean result = pm.updatePlayer(p);
+
+				if(result) {
+					parent.login(p.getUser());
+					System.out.println(new Date().toString() + ": " + p.getName() + " logged in.");
+					System.out.println("Online players: " + parent.getLogged().toString());
+					return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
+				} else {
+					return Consts.ERROR + Consts.SEPARATOR + command;
+				}
 			}
 		}
 
