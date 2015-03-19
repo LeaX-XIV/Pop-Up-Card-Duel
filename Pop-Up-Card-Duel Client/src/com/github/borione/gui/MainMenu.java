@@ -106,7 +106,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 					p1.add(new CardDrawn(c));
 				}
 				JScrollPane sp = new JScrollPane(p1);
-				// DOESN?T SHOW SCROLLBAR
+				// DOESN'T SHOW SCROLLBAR
 				sp.createVerticalScrollBar();
 				p.add(sp);
 				f.setBounds(100, 100, 700, 500);

@@ -1,8 +1,13 @@
 package com.github.borione.util;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontFormatException;
+import java.awt.Graphics2D;
 import java.awt.GraphicsEnvironment;
+import java.awt.RenderingHints;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -49,6 +54,44 @@ public class FontUtils {
 
 		// Set the label's font size to the newly determined size.
 		txtArea.setFont(new Font(txtFont.getName(), Font.PLAIN, fontSizeToUse));
+	}
+	
+	public static BufferedImage stretch(String txt, Font font, int width, int heigth, Color back, Color fore) {
+		// used to stretch the graphics instance sideways
+        AffineTransform stretch = new AffineTransform();
+        int w = width; // image width
+        int h = heigth; // image height
+        int f = font.getSize(); // Font size in px
+        String s = txt;
+
+        final BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = bi.createGraphics();
+        g.setFont(new Font(font.getName(), font.getStyle(), f));
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+        // paint BG
+        g.setColor(back);
+        g.fillRect(0, 0, w, h);
+        g.setColor(fore);
+
+        for (int i = 0; (i * f) + f <= h; i++) {
+            g.drawString(s, 0, (i * f) + f);
+            // stretch
+            stretch.concatenate(AffineTransform.getScaleInstance(1.18, 1d));
+            g.setTransform(stretch);
+
+            // fade
+//            Color c = g.getColor();
+//            g.setColor(new Color (
+//                    c.getRed(),
+//                    c.getGreen(),
+//                    c.getBlue(),
+//                    (int)(c.getAlpha()*.75)));
+        }
+
+        g.dispose();
+
+        return bi;
 	}
 	
 	public static Font registerFont(String fileName) {
