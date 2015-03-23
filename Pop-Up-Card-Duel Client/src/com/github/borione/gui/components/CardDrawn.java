@@ -8,30 +8,20 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
 import com.github.borione.crud.Card;
-import com.github.borione.crud.CardColor;
-import com.github.borione.crud.CpCost;
-import com.github.borione.main.Main;
 import com.github.borione.util.FontUtils;
 import com.github.borione.util.ImageUtils;
-import com.github.borione.util.ListUtils;
 import com.github.borione.util.NumberUtils;
-import com.github.borione.util.StringUtils;
 
 import java.awt.Dimension;
 
 import javax.swing.SwingConstants;
 
-import sun.nio.ch.IOUtil;
-
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.util.List;
 
 public class CardDrawn extends ImagePanel {
 
@@ -45,7 +35,7 @@ public class CardDrawn extends ImagePanel {
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		f.setUndecorated(true);
-		f.setContentPane(new CardDrawn(Card.factory(6)));
+		f.setContentPane(new CardDrawn(Card.factory(5)));
 		f.setBounds(100, 100, 256, 384);
 		f.setBackground(new Color(0, 255, 0, 0));
 		f.setVisible(true);
@@ -91,29 +81,15 @@ public class CardDrawn extends ImagePanel {
 		description = new JTextPane();
 		description.setContentType("text/html");
 
-		List<CpCost> cps = c.retriveCpCost();
-
-		if(!cps.isEmpty()) {
-			description.setText("<html><b>&#60;Crystal Ability&#62;<br>CP: ");
-			for (CpCost cpCost : cps) {
-				for(int i = 0; i < cpCost.getCost(); i++) {
-					if(cpCost.getCp().equals(Color.RED)) {
-						description.setText(description.getText() + "<img src=\"37.59.123.99/popup/crystals/red_crystal.png\">");
-					} else if(cpCost.getCp().equals(Color.GREEN)) {
-						description.setText(description.getText() + "<img src=\"37.59.123.99/popup/crystals/green_crystal.png\">");
-					} else if(cpCost.getCp().equals(Color.BLUE)) {
-						description.setText(description.getText() + "<img src=\"37.59.123.99/popup/crystals/blue_crystal.png\">");
-					} else if(cpCost.getCp().equals(Color.YELLOW)) {
-						description.setText(description.getText() + "<img src=\"37.59.123.99/popup/crystals/yellow_crystal.png\">");
-					}
-				}
-			}
-
-			description.setText(description.getText() + "</b></html>");
+		try {
+			description.setPage("http://37.59.123.99/popup/cardDescription.php?card=" + c.getId());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		description.setOpaque(false);
 		// FIXME: FONT SIZE
-		description.setFont(new Font("Monospaced", Font.BOLD, 12));
+//		description.setFont(new Font("Monospaced", Font.BOLD, 12));
 		//		FontUtils.fitNameFont(description);
 		description.setSelectionColor(Color.WHITE);
 		description.setSelectedTextColor(Color.BLACK);
@@ -122,6 +98,7 @@ public class CardDrawn extends ImagePanel {
 		description.setAutoscrolls(false);
 		description.setBounds(40, 215, 180, 105);
 		description.setBackground(new Color(0, 255, 0, 0));
+		description.setForeground(new Color(0, 255, 0, 0));
 		add(description);
 	}
 
@@ -136,8 +113,5 @@ public class CardDrawn extends ImagePanel {
 			e.printStackTrace();
 			return null;
 		}
-
-
-
 	}
 }
