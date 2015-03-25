@@ -67,8 +67,7 @@ public class DeckSelect extends JFrame {
 	 * Create the frame.
 	 */
 	public DeckSelect(Player p) {
-		setVisible(true);
-		setResizable(false);
+//		setResizable(false);
 		this.p = p;
 
 		setUndecorated(true);
@@ -116,6 +115,11 @@ public class DeckSelect extends JFrame {
 		panel_1.add(panel_3, BorderLayout.SOUTH);
 
 		btnPrevious = new JButton("");
+		btnPrevious.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+			}
+		});
 		btnPrevious.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/left_arrow.png")));
 		btnPrevious.setOpaque(false);
 		btnPrevious.setFocusPainted(false);
@@ -138,15 +142,30 @@ public class DeckSelect extends JFrame {
 		panel_1.add(layeredPane, BorderLayout.CENTER);
 		layeredPane.setLayout(new BorderLayout(0, 0));
 
+		
+		
 		populateList();
+		
+		setVisible(true);
 	}
 
 	// FIXME: BOOM
 	public void populateList() {
 		List<Deck> decks = p.retriveDecks();
-		for(int i = 0; i< decks.size(); i++) {
+		JPanel p = new JPanel(new GridLayout(2, 0));
+		for(int i = 0; i < decks.size(); i++) {
+			if(i % 2 == 0 && i != 0) {
+				layeredPane.add(p, BorderLayout.CENTER, -1);
+				revalidate();
+				p = new JPanel(new GridLayout(2, 0));
+			}
 			Deck deck = decks.get(i);
-			layeredPane.add(new DeckDescription(deck, i+1), (i%2 == 0? BorderLayout.NORTH : BorderLayout.SOUTH));
+			p.add(new DeckDescription(deck, i+1));
 		}
+		layeredPane.add(p, BorderLayout.CENTER, -1);
+		revalidate();
+		layeredPane.moveToFront(layeredPane.getComponent(1));
+		
+		lblPagine.setText("1/" + (decks.size() / 2 + decks.size() % 2));
 	}
 }

@@ -52,7 +52,6 @@ public class DeckDescription extends JPanel {
 		
 		lblName = new JLabel(d.getName());
 		panel.add(lblName, BorderLayout.WEST);
-		
 		lblCards = new JLabel(d.retriveNumberCards() + "/15");
 		panel.add(lblCards, BorderLayout.EAST);
 		

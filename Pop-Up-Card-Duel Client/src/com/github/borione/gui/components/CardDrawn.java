@@ -35,7 +35,7 @@ public class CardDrawn extends ImagePanel {
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		f.setUndecorated(true);
-		f.setContentPane(new CardDrawn(Card.factory(5)));
+		f.setContentPane(new CardDrawn(Card.factory(1)));
 		f.setBounds(100, 100, 256, 384);
 		f.setBackground(new Color(0, 255, 0, 0));
 		f.setVisible(true);
@@ -89,14 +89,14 @@ public class CardDrawn extends ImagePanel {
 		}
 		description.setOpaque(false);
 		// FIXME: FONT SIZE
-//		description.setFont(new Font("Monospaced", Font.BOLD, 12));
+		description.setFont(new Font("Arial", Font.BOLD, 12));
 		//		FontUtils.fitNameFont(description);
-		description.setSelectionColor(Color.WHITE);
+		description.setSelectionColor(new Color(0, 255, 0, 0));
 		description.setSelectedTextColor(Color.BLACK);
 		description.setEditable(false);
 		description.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		description.setAutoscrolls(false);
-		description.setBounds(40, 215, 180, 105);
+		description.setBounds(30, 205, 190, 115);
 		description.setBackground(new Color(0, 255, 0, 0));
 		description.setForeground(new Color(0, 255, 0, 0));
 		add(description);
