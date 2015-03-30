@@ -86,4 +86,8 @@ public class DeckDescription extends JPanel {
 			panel_2.add(crystal);
 		}
 	}
+	
+	public int getNumber() {
+		return Integer.parseInt(lblNumber.getText());
+	}
 }

@@ -61,6 +61,8 @@ public class Loading extends JDialog {
 		lblText.setFont(new Font("Tahoma", Font.PLAIN, 17));
 		lblText.setHorizontalAlignment(SwingConstants.CENTER);
 		contentPane.add(lblText, BorderLayout.CENTER);
+		
+		pack();
 	}
 	
 	public void stop() {

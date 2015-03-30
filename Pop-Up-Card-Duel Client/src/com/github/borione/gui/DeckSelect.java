@@ -1,11 +1,13 @@
 package com.github.borione.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+import javax.swing.border.LineBorder;
 import javax.swing.JButton;
 
 import java.awt.Dimension;
@@ -27,6 +29,8 @@ import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ButtonGroup;
+import javax.swing.GroupLayout.Group;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JInternalFrame;
@@ -129,6 +133,7 @@ public class DeckSelect extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(btnPrevious.isEnabled()) {
 					selected -= 1;
+//					System.out.println(selected);
 					pagesPane.removeAll();
 					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
 					lblPagine.setText((selected + 1) + "/" + pages.size());
@@ -140,6 +145,8 @@ public class DeckSelect extends JFrame {
 					} else {
 						btnNext.setEnabled(true);
 					}
+					repaint();
+					revalidate();
 				}
 			}
 		});
@@ -159,6 +166,7 @@ public class DeckSelect extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(btnNext.isEnabled()) {
 					selected += 1;
+//					System.out.println(selected);
 					pagesPane.removeAll();
 					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
 					lblPagine.setText((selected + 1) + "/" + pages.size());
@@ -170,6 +178,9 @@ public class DeckSelect extends JFrame {
 					if(selected + 1 == pages.size()) {
 						btnNext.setEnabled(false);
 					}
+
+					repaint();
+					revalidate();
 				}
 			}
 		});
@@ -198,18 +209,25 @@ public class DeckSelect extends JFrame {
 		for(int i = 0; i < decks.size(); i++) {
 			if(i % 2 == 0 && i != 0) {
 				pages.add(p);
-				revalidate();
 				p = new JPanel(new GridLayout(2, 0));
 			}
 			Deck deck = decks.get(i);
-			p.add(new DeckDescription(deck, i+1));
+			DeckDescription dd = new DeckDescription(deck, i+1);
+			dd.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(MouseEvent e) {
+					sentaku = dd.getNumber();
+					dd.setBorder(new LineBorder(Color.BLACK, 3, true));
+				}
+			});
+			p.add(dd);
 		}
 		pages.add(p);
-		revalidate();
 		
 		selected = 0;
 		pagesPane.add(pages.get(selected), BorderLayout.CENTER);
 		lblPagine.setText((selected + 1) + "/" + pages.size());
 		btnPrevious.setEnabled(false);
+		repaint();
 	}
 }
