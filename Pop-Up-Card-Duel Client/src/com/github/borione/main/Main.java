@@ -18,17 +18,6 @@ public class Main {
 		// FIXME: FUCKING FONT EXTENSION
 		cardFont = FontUtils.registerFont(Main.class.getResource("/font/card_font.nftr").toString());
 
-//		new Login();
-		
-		resizeCards();
+		new Login();
 	}
-
-	private static void resizeCards() {
-		for(int i = 0; i < new File("C:/Users/Quarta/Desktop/cards").list().length; i++) {
-			BufferedImage img = ImageUtils.readImage("C:/Users/Quarta/Desktop/cards/" + NumberUtils.toNumDigits(i, 3) + ".png");
-			img = ImageUtils.resizeBetter(img, 256, 384);
-			ImageUtils.writeImage(img, "C:/Users/Quarta/Documents/GitHub/Pop-Up-Card-Duel/Pop-Up-Card-Duel Client/res/images/cards/" + NumberUtils.toNumDigits(i, 3) + ".png", ".png");
-		}
-	}
-
 }

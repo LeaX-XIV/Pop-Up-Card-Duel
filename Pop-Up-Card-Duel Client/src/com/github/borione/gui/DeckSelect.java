@@ -15,6 +15,7 @@ import javax.swing.ImageIcon;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.DeckDescription;
+import com.github.borione.gui.components.Loading;
 import com.github.borione.gui.components.MotionPanel;
 
 import java.awt.event.MouseAdapter;
@@ -23,12 +24,15 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JInternalFrame;
+
 import java.awt.GridLayout;
+
 import javax.swing.JLayeredPane;
 
 public class DeckSelect extends JFrame {
@@ -46,7 +50,10 @@ public class DeckSelect extends JFrame {
 	JButton btnNext;
 
 	Player p;
-	private JLayeredPane layeredPane;
+	private JPanel pagesPane;
+	List<JPanel> pages;
+	int selected;
+	int sentaku;
 
 	/**
 	 * Launch the application.
@@ -67,6 +74,8 @@ public class DeckSelect extends JFrame {
 	 * Create the frame.
 	 */
 	public DeckSelect(Player p) {
+		
+		Loading l = new Loading("Loading decks.");
 //		setResizable(false);
 		this.p = p;
 
@@ -118,6 +127,20 @@ public class DeckSelect extends JFrame {
 		btnPrevious.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				if(btnPrevious.isEnabled()) {
+					selected -= 1;
+					pagesPane.removeAll();
+					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
+					lblPagine.setText((selected + 1) + "/" + pages.size());
+					if(selected == 0) {
+						btnPrevious.setEnabled(false);
+					}
+					if(selected + 1 == pages.size()) {
+						btnNext.setEnabled(false);
+					} else {
+						btnNext.setEnabled(true);
+					}
+				}
 			}
 		});
 		btnPrevious.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/left_arrow.png")));
@@ -131,6 +154,25 @@ public class DeckSelect extends JFrame {
 		panel_3.add(lblPagine);
 
 		btnNext = new JButton("");
+		btnNext.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if(btnNext.isEnabled()) {
+					selected += 1;
+					pagesPane.removeAll();
+					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
+					lblPagine.setText((selected + 1) + "/" + pages.size());
+					if(selected == 0) {
+						btnPrevious.setEnabled(false);
+					} else {
+						btnPrevious.setEnabled(true);
+					}
+					if(selected + 1 == pages.size()) {
+						btnNext.setEnabled(false);
+					}
+				}
+			}
+		});
 		btnNext.setIcon(new ImageIcon(DeckSelect.class.getResource("/images/right_arrow.png")));
 		btnNext.setContentAreaFilled(false);
 		btnNext.setFocusPainted(false);
@@ -138,14 +180,14 @@ public class DeckSelect extends JFrame {
 		btnNext.setOpaque(false);
 		panel_3.add(btnNext);
 
-		layeredPane = new JLayeredPane();
-		panel_1.add(layeredPane, BorderLayout.CENTER);
-		layeredPane.setLayout(new BorderLayout(0, 0));
-
+		pagesPane = new JPanel();
+		panel_1.add(pagesPane, BorderLayout.CENTER);
+		pagesPane.setLayout(new BorderLayout(0, 0));		
 		
-		
+		pages = new ArrayList<JPanel>();
 		populateList();
 		
+		l.stop();
 		setVisible(true);
 	}
 
@@ -155,17 +197,19 @@ public class DeckSelect extends JFrame {
 		JPanel p = new JPanel(new GridLayout(2, 0));
 		for(int i = 0; i < decks.size(); i++) {
 			if(i % 2 == 0 && i != 0) {
-				layeredPane.add(p, BorderLayout.CENTER, -1);
+				pages.add(p);
 				revalidate();
 				p = new JPanel(new GridLayout(2, 0));
 			}
 			Deck deck = decks.get(i);
 			p.add(new DeckDescription(deck, i+1));
 		}
-		layeredPane.add(p, BorderLayout.CENTER, -1);
+		pages.add(p);
 		revalidate();
-		layeredPane.moveToFront(layeredPane.getComponent(1));
 		
-		lblPagine.setText("1/" + (decks.size() / 2 + decks.size() % 2));
+		selected = 0;
+		pagesPane.add(pages.get(selected), BorderLayout.CENTER);
+		lblPagine.setText((selected + 1) + "/" + pages.size());
+		btnPrevious.setEnabled(false);
 	}
 }
