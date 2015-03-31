@@ -2,6 +2,7 @@ package com.github.borione.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -31,6 +32,7 @@ import java.util.List;
 
 import javax.swing.ButtonGroup;
 import javax.swing.GroupLayout.Group;
+import javax.swing.JComponent;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 import javax.swing.JInternalFrame;
@@ -118,6 +120,12 @@ public class DeckSelect extends JFrame {
 		flowLayout.setAlignment(FlowLayout.TRAILING);
 
 		btnChoose = new JButton("Choose");
+		btnChoose.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				System.out.println("Hai scelto il deck " + pages.get(sentaku + 1).getName());
+			}
+		});
 		panel_2.add(btnChoose);
 
 		panel_1 = new JPanel();
@@ -217,6 +225,12 @@ public class DeckSelect extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					sentaku = dd.getNumber();
+					for (JPanel page : pages) {
+						Component[] decki = page.getComponents();
+						for (Component deck : decki) {
+							((JComponent) deck).setBorder(null);
+						}
+					}
 					dd.setBorder(new LineBorder(Color.BLACK, 3, true));
 				}
 			});
