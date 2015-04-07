@@ -56,6 +56,7 @@ public class DeckSelect extends JFrame {
 	JButton btnNext;
 
 	Player p;
+	List<Deck> decks;
 	private JPanel pagesPane;
 	List<JPanel> pages;
 	int selected;
@@ -85,6 +86,7 @@ public class DeckSelect extends JFrame {
 //		setResizable(false);
 		this.p = p;
 
+		setAlwaysOnTop(true);
 		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 629, 478);
@@ -123,7 +125,8 @@ public class DeckSelect extends JFrame {
 		btnChoose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Hai scelto il deck " + pages.get(sentaku + 1).getName());
+				System.out.println("Hai scelto il deck " + decks.get(sentaku - 1).getName());
+				dispose();
 			}
 		});
 		panel_2.add(btnChoose);
@@ -212,7 +215,7 @@ public class DeckSelect extends JFrame {
 
 	// FIXME: BOOM
 	public void populateList() {
-		List<Deck> decks = p.retriveDecks();
+		decks = p.retriveDecks();
 		JPanel p = new JPanel(new GridLayout(2, 0));
 		for(int i = 0; i < decks.size(); i++) {
 			if(i % 2 == 0 && i != 0) {
@@ -235,6 +238,7 @@ public class DeckSelect extends JFrame {
 				}
 			});
 			p.add(dd);
+			System.out.println("Aggiunto deck " + deck.getName());
 		}
 		pages.add(p);
 		

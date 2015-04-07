@@ -45,7 +45,6 @@ public class Loading extends JDialog {
 		setUndecorated(true);
 		setVisible(true);
 		setAlwaysOnTop(true);
-//		setUndecorated(true);
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 451, 88);
 		contentPane = new JPanel();

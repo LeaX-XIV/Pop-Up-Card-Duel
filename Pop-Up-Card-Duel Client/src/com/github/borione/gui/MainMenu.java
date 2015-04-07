@@ -23,6 +23,7 @@ import com.github.borione.util.Consts;
 import com.github.borione.util.FontUtils;
 import com.github.borione.util.ImageUtils;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
@@ -46,17 +47,13 @@ public class MainMenu extends JPanel implements ComponentListener {
 	JLabel lblName;
 	JButton btnQuickBattle;
 	JButton btnCollectionManager;
-	JButton btnClose;
 	JButton btnOptoins;
 
 	public static void main(String[] args) {
-		JFrame m = new JFrame();
+		MainGui mg = new MainGui();
 		MainMenu m1 = new MainMenu(Player.factory(args[0]));
-		m.setUndecorated(true);
-		m.setContentPane(m1);
-		m.setExtendedState(m.getExtendedState() | JFrame.MAXIMIZED_BOTH);
-		m.setResizable(false);
-		m.setVisible(true);
+		mg.getContentPane().add(m1, BorderLayout.CENTER);
+		mg.setVisible(true);
 	}
 
 	/**
@@ -86,9 +83,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnQuickBattle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Loading l = new Loading("Loading. Please wait.");
 				new DeckSelect(p);
-				l.stop();
 			}
 		});
 		btnQuickBattle.setFocusPainted(false);
@@ -116,25 +111,6 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnCollectionManager.setFocusPainted(false);
 		btnCollectionManager.setPreferredSize(new Dimension(87, 23));
 
-		btnClose = new JButton("");
-		btnClose.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				System.exit(0);
-			}
-		});
-		btnClose.setFocusPainted(false);
-		btnClose.setBorder(null);
-		btnClose.setOpaque(false);
-		btnClose.setContentAreaFilled(false);
-		btnClose.setBorderPainted(false);
-		btnClose.setIcon(new ImageIcon(MainMenu.class.getResource("/images/close.png")));
-		btnClose.setMinimumSize(new Dimension(30, 30));
-		btnClose.setMaximumSize(new Dimension(30, 30));
-		btnClose.setPreferredSize(new Dimension(30, 30));
-		btnClose.setSize(new Dimension(30, 30));
-		btnClose.setPressedIcon(new ImageIcon(MainMenu.class.getResource("/images/close_pressed.png")));
-
 		btnOptoins = new JButton("");
 		btnOptoins.setFocusPainted(false);
 		btnOptoins.setPressedIcon(new ImageIcon(MainMenu.class.getResource("/images/options_pressed.png")));
@@ -148,43 +124,33 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnOptoins.setSize(new Dimension(30, 30));
 		groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-				groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGap(10)
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING)
-										.addGroup(groupLayout.createSequentialGroup()
-												.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-														.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-																.addComponent(btnCollectionManager, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-																.addComponent(btnQuickBattle, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
-																.addComponent(btnOptoins, 30, 30, 30))
-																.addContainerGap(593, Short.MAX_VALUE))
-																.addGroup(Alignment.LEADING, groupLayout.createSequentialGroup()
-																		.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, true)
-																				.addComponent(lblPhoto, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
-																				.addComponent(lblName, Alignment.LEADING, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE))
-																				.addGap(620)))
-																				.addComponent(btnClose, Alignment.TRAILING, 30, 30, 30)))
-				);
+					.addGap(10)
+					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+							.addComponent(btnCollectionManager, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+							.addComponent(btnQuickBattle, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+						.addComponent(btnOptoins, 30, 30, 30)
+						.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+						.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE))
+					.addContainerGap(804, Short.MAX_VALUE))
+		);
 		groupLayout.setVerticalGroup(
-				groupLayout.createParallelGroup(Alignment.LEADING)
+			groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addGroup(groupLayout.createSequentialGroup()
-										.addContainerGap()
-										.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED)
-										.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-										.addGap(109)
-										.addComponent(btnQuickBattle)
-										.addGap(65)
-										.addComponent(btnCollectionManager, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addPreferredGap(ComponentPlacement.RELATED, 144, Short.MAX_VALUE)
-										.addComponent(btnOptoins, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addComponent(btnClose, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-										.addContainerGap())
-				);
+					.addContainerGap()
+					.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED)
+					.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+					.addGap(109)
+					.addComponent(btnQuickBattle)
+					.addGap(65)
+					.addComponent(btnCollectionManager, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
+					.addComponent(btnOptoins, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap())
+		);
 		setLayout(groupLayout);
 	}
 
