@@ -5,6 +5,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
 
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -27,21 +28,20 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 
 import java.awt.FlowLayout;
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.locks.Lock;
 
-import javax.swing.ButtonGroup;
-import javax.swing.GroupLayout.Group;
 import javax.swing.JComponent;
-import javax.swing.JList;
-import javax.swing.ListSelectionModel;
-import javax.swing.JInternalFrame;
 
 import java.awt.GridLayout;
 
-import javax.swing.JLayeredPane;
-
 public class DeckSelect extends JFrame {
+	
+	public Deck selected = null;
+	public static boolean isSelected = true;
 
 	private JPanel contentPane;
 
@@ -59,7 +59,7 @@ public class DeckSelect extends JFrame {
 	List<Deck> decks;
 	private JPanel pagesPane;
 	List<JPanel> pages;
-	int selected;
+	int selectedPage;
 	int sentaku;
 
 	/**
@@ -81,7 +81,7 @@ public class DeckSelect extends JFrame {
 	 * Create the frame.
 	 */
 	public DeckSelect(Player p) {
-		
+		isSelected = false;
 		Loading l = new Loading("Loading decks.");
 //		setResizable(false);
 		this.p = p;
@@ -103,7 +103,7 @@ public class DeckSelect extends JFrame {
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.exit(0);
+				dispose();
 			}
 		});
 		btnClose.setPressedIcon(new ImageIcon(DeckSelect.class.getResource("/images/close_pressed.png")));
@@ -125,8 +125,14 @@ public class DeckSelect extends JFrame {
 		btnChoose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				System.out.println("Hai scelto il deck " + decks.get(sentaku - 1).getName());
+				selected = decks.get(sentaku - 1);
 				dispose();
+				
+					synchronized (MainMenu.lock){
+					     isSelected = true;
+					     MainMenu.lock.notifyAll();
+					}
+				
 			}
 		});
 		panel_2.add(btnChoose);
@@ -143,15 +149,15 @@ public class DeckSelect extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(btnPrevious.isEnabled()) {
-					selected -= 1;
+					selectedPage -= 1;
 //					System.out.println(selected);
 					pagesPane.removeAll();
-					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
-					lblPagine.setText((selected + 1) + "/" + pages.size());
-					if(selected == 0) {
+					pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
+					lblPagine.setText((selectedPage + 1) + "/" + pages.size());
+					if(selectedPage == 0) {
 						btnPrevious.setEnabled(false);
 					}
-					if(selected + 1 == pages.size()) {
+					if(selectedPage + 1 == pages.size()) {
 						btnNext.setEnabled(false);
 					} else {
 						btnNext.setEnabled(true);
@@ -176,17 +182,17 @@ public class DeckSelect extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(btnNext.isEnabled()) {
-					selected += 1;
+					selectedPage += 1;
 //					System.out.println(selected);
 					pagesPane.removeAll();
-					pagesPane.add(pages.get(selected), BorderLayout.CENTER);
-					lblPagine.setText((selected + 1) + "/" + pages.size());
-					if(selected == 0) {
+					pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
+					lblPagine.setText((selectedPage + 1) + "/" + pages.size());
+					if(selectedPage == 0) {
 						btnPrevious.setEnabled(false);
 					} else {
 						btnPrevious.setEnabled(true);
 					}
-					if(selected + 1 == pages.size()) {
+					if(selectedPage + 1 == pages.size()) {
 						btnNext.setEnabled(false);
 					}
 
@@ -242,9 +248,9 @@ public class DeckSelect extends JFrame {
 		}
 		pages.add(p);
 		
-		selected = 0;
-		pagesPane.add(pages.get(selected), BorderLayout.CENTER);
-		lblPagine.setText((selected + 1) + "/" + pages.size());
+		selectedPage = 0;
+		pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
+		lblPagine.setText((selectedPage + 1) + "/" + pages.size());
 		btnPrevious.setEnabled(false);
 		repaint();
 	}

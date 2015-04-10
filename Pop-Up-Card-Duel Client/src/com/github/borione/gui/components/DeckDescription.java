@@ -66,6 +66,7 @@ public class DeckDescription extends JPanel {
 		populateCrystals(d);
 	}
 	
+	// XXX: CAN USE QUERY TO EXTRACT ONLY THE COLORS
 	private void populateCrystals(Deck d) {
 		List<Card> cards = d.retriveCards();
 		

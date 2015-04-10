@@ -16,6 +16,7 @@ import javax.swing.border.LineBorder;
 
 import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Card;
+import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
 import com.github.borione.gui.components.Loading;
@@ -39,6 +40,8 @@ import javax.swing.SwingConstants;
 
 public class MainMenu extends JPanel implements ComponentListener {
 
+	static Object lock = new Object();
+	
 	Player p;
 	
 	GroupLayout groupLayout;
@@ -61,9 +64,9 @@ public class MainMenu extends JPanel implements ComponentListener {
 	 */
 	public MainMenu(Player p) {
 		this.p = p;
-		
+
 		this.addComponentListener(this);
-		
+
 		setAlignmentX(Component.LEFT_ALIGNMENT);
 
 		lblPhoto = new JLabel("photo");
@@ -83,7 +86,37 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnQuickBattle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				new DeckSelect(p);
+				if(btnQuickBattle.isEnabled()) {
+					if(DeckSelect.isSelected) {
+					btnQuickBattle.setEnabled(false);
+					btnCollectionManager.setEnabled(false);
+					DeckSelect ds = new DeckSelect(p);
+					ds.setVisible(true);
+					
+					synchronized(lock){
+						
+						 while(!DeckSelect.isSelected){
+							
+							 try {
+								 //System.out.println(DeckSelect.isSelected);
+								lock.wait();
+							} catch (InterruptedException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+						 }
+						 
+				    }
+				    
+					 
+					Deck d = ds.selected;
+					System.out.println(d.getName());
+					btnQuickBattle.setEnabled(true);
+					btnCollectionManager.setEnabled(true);
+					}
+					
+				}
 			}
 		});
 		btnQuickBattle.setFocusPainted(false);
@@ -92,20 +125,22 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnCollectionManager.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// JUST A TRY
-				JFrame f = new JFrame();
-				JPanel p = new JPanel();
-				f.setContentPane(p);
-				JPanel p1 = new JPanel(new GridLayout(0, 2, 10, 15));
-				for(Card c : MainMenu.this.p.retriveCollection()) {
-					p1.add(new CardDrawn(c));
+				if(btnCollectionManager.isEnabled()) {
+					// JUST A TRY
+					JFrame f = new JFrame();
+					JPanel p = new JPanel();
+					f.setContentPane(p);
+					JPanel p1 = new JPanel(new GridLayout(0, 2, 10, 15));
+					for(Card c : MainMenu.this.p.retriveCollection()) {
+						p1.add(new CardDrawn(c));
+					}
+					JScrollPane sp = new JScrollPane(p1);
+					// DOESN'T SHOW SCROLLBAR
+					sp.createVerticalScrollBar();
+					p.add(sp);
+					f.setBounds(100, 100, 700, 500);
+					f.setVisible(true);
 				}
-				JScrollPane sp = new JScrollPane(p1);
-				// DOESN'T SHOW SCROLLBAR
-				sp.createVerticalScrollBar();
-				p.add(sp);
-				f.setBounds(100, 100, 700, 500);
-				f.setVisible(true);
 			}
 		});
 		btnCollectionManager.setFocusPainted(false);
@@ -124,33 +159,33 @@ public class MainMenu extends JPanel implements ComponentListener {
 		btnOptoins.setSize(new Dimension(30, 30));
 		groupLayout = new GroupLayout(this);
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(10)
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
-							.addComponent(btnCollectionManager, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-							.addComponent(btnQuickBattle, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
-						.addComponent(btnOptoins, 30, 30, 30)
-						.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE))
-					.addContainerGap(804, Short.MAX_VALUE))
-		);
+						.addGap(10)
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createParallelGroup(Alignment.TRAILING, false)
+										.addComponent(btnCollectionManager, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(btnQuickBattle, Alignment.LEADING, GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE))
+										.addComponent(btnOptoins, 30, 30, 30)
+										.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE)
+										.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 163, GroupLayout.PREFERRED_SIZE))
+										.addContainerGap(804, Short.MAX_VALUE))
+				);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addContainerGap()
-					.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED)
-					.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
-					.addGap(109)
-					.addComponent(btnQuickBattle)
-					.addGap(65)
-					.addComponent(btnCollectionManager, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addPreferredGap(ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
-					.addComponent(btnOptoins, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addContainerGap())
-		);
+						.addContainerGap()
+						.addComponent(lblPhoto, GroupLayout.PREFERRED_SIZE, 133, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addComponent(lblName, GroupLayout.PREFERRED_SIZE, 50, GroupLayout.PREFERRED_SIZE)
+						.addGap(109)
+						.addComponent(btnQuickBattle)
+						.addGap(65)
+						.addComponent(btnCollectionManager, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addPreferredGap(ComponentPlacement.RELATED, 202, Short.MAX_VALUE)
+						.addComponent(btnOptoins, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addContainerGap())
+				);
 		setLayout(groupLayout);
 	}
 
@@ -163,7 +198,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 
 		lblPhoto.setIcon(new ImageIcon(img));
 	}
-	
+
 	@Override
 	public void componentResized(ComponentEvent e) {
 		FontUtils.fitNameFont(lblName);
@@ -176,7 +211,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-    }
+	}
 
 	@Override
 	public void componentHidden(ComponentEvent e) {
