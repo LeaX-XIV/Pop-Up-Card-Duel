@@ -1,6 +1,7 @@
 package com.github.borione.gui.components;
 
 import java.awt.Point;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
@@ -19,7 +20,7 @@ public class MotionPanel extends JPanel {
 
 	private Point initialClick;
 
-	public MotionPanel(final JFrame parent) {
+	public MotionPanel(final Window parent) {
 		
 		addMouseListener(new MouseAdapter() {
 			public void mousePressed(MouseEvent e) {

@@ -19,7 +19,6 @@ import com.github.borione.crud.Card;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
-import com.github.borione.gui.components.Loading;
 import com.github.borione.util.Consts;
 import com.github.borione.util.FontUtils;
 import com.github.borione.util.ImageUtils;
@@ -87,35 +86,14 @@ public class MainMenu extends JPanel implements ComponentListener {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(btnQuickBattle.isEnabled()) {
-					if(DeckSelect.isSelected) {
 					btnQuickBattle.setEnabled(false);
 					btnCollectionManager.setEnabled(false);
-					DeckSelect ds = new DeckSelect(p);
-					ds.setVisible(true);
-					
-					synchronized(lock){
-						
-						 while(!DeckSelect.isSelected){
-							
-							 try {
-								 //System.out.println(DeckSelect.isSelected);
-								lock.wait();
-							} catch (InterruptedException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
-						 }
-						 
-				    }
-				    
+					DeckSelect ds = new DeckSelect(p);				    
 					 
-					Deck d = ds.selected;
+					Deck d = ds.run();
 					System.out.println(d.getName());
 					btnQuickBattle.setEnabled(true);
-					btnCollectionManager.setEnabled(true);
-					}
-					
+					btnCollectionManager.setEnabled(true);					
 				}
 			}
 		});

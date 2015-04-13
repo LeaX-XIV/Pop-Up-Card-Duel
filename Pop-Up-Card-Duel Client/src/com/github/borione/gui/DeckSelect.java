@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.Window;
 
 import javax.swing.JDialog;
 import javax.swing.JFrame;
@@ -28,20 +29,17 @@ import java.awt.event.MouseEvent;
 import javax.swing.JLabel;
 
 import java.awt.FlowLayout;
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.concurrent.locks.Lock;
 
 import javax.swing.JComponent;
 
 import java.awt.GridLayout;
 
-public class DeckSelect extends JFrame {
-	
+public class DeckSelect extends JDialog {
+
 	public Deck selected = null;
-	public static boolean isSelected = true;
+	public Boolean isSelected = false;
 
 	private JPanel contentPane;
 
@@ -55,12 +53,13 @@ public class DeckSelect extends JFrame {
 	JLabel lblPagine;
 	JButton btnNext;
 
+	Loading l;
 	Player p;
 	List<Deck> decks;
 	private JPanel pagesPane;
 	List<JPanel> pages;
 	int selectedPage;
-	int sentaku;
+	int sentaku = -1;
 
 	/**
 	 * Launch the application.
@@ -81,9 +80,9 @@ public class DeckSelect extends JFrame {
 	 * Create the frame.
 	 */
 	public DeckSelect(Player p) {
-		isSelected = false;
-		Loading l = new Loading("Loading decks.");
-//		setResizable(false);
+//		super(frame, "deck");
+		l = new Loading("Loading decks.");
+		//		setResizable(false);
 		this.p = p;
 
 		setAlwaysOnTop(true);
@@ -114,6 +113,10 @@ public class DeckSelect extends JFrame {
 		btnClose.setBorderPainted(false);
 		btnClose.setPreferredSize(new Dimension(30, 30));
 		btnClose.setSize(new Dimension(30, 30));
+
+	}
+
+	public Deck run() {
 		panel.add(btnClose, BorderLayout.EAST);
 
 		panel_2 = new JPanel();
@@ -125,14 +128,12 @@ public class DeckSelect extends JFrame {
 		btnChoose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				selected = decks.get(sentaku - 1);
-				dispose();
-				
-					synchronized (MainMenu.lock){
-					     isSelected = true;
-					     MainMenu.lock.notifyAll();
+				synchronized (isSelected) {
+					if(sentaku != -1) {
+						isSelected.notify();
 					}
-				
+				}
+
 			}
 		});
 		panel_2.add(btnChoose);
@@ -150,7 +151,7 @@ public class DeckSelect extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(btnPrevious.isEnabled()) {
 					selectedPage -= 1;
-//					System.out.println(selected);
+					//					System.out.println(selected);
 					pagesPane.removeAll();
 					pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
 					lblPagine.setText((selectedPage + 1) + "/" + pages.size());
@@ -183,7 +184,7 @@ public class DeckSelect extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				if(btnNext.isEnabled()) {
 					selectedPage += 1;
-//					System.out.println(selected);
+					//					System.out.println(selected);
 					pagesPane.removeAll();
 					pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
 					lblPagine.setText((selectedPage + 1) + "/" + pages.size());
@@ -211,12 +212,27 @@ public class DeckSelect extends JFrame {
 		pagesPane = new JPanel();
 		panel_1.add(pagesPane, BorderLayout.CENTER);
 		pagesPane.setLayout(new BorderLayout(0, 0));		
-		
+
 		pages = new ArrayList<JPanel>();
 		populateList();
-		
+
 		l.stop();
 		setVisible(true);
+		
+		synchronized (isSelected){
+			while(!isSelected) {
+				try {
+					isSelected.wait();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			
+			dispose();
+
+			return decks.get(sentaku - 1);
+		}
 	}
 
 	// FIXME: BOOM
@@ -234,6 +250,7 @@ public class DeckSelect extends JFrame {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					sentaku = dd.getNumber();
+					isSelected = true;
 					for (JPanel page : pages) {
 						Component[] decki = page.getComponents();
 						for (Component deck : decki) {
@@ -247,7 +264,7 @@ public class DeckSelect extends JFrame {
 			System.out.println("Aggiunto deck " + deck.getName());
 		}
 		pages.add(p);
-		
+
 		selectedPage = 0;
 		pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
 		lblPagine.setText((selectedPage + 1) + "/" + pages.size());
