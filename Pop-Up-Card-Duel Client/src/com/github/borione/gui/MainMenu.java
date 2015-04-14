@@ -88,9 +88,9 @@ public class MainMenu extends JPanel implements ComponentListener {
 				if(btnQuickBattle.isEnabled()) {
 					btnQuickBattle.setEnabled(false);
 					btnCollectionManager.setEnabled(false);
-					DeckSelect ds = new DeckSelect((JFrame) MainMenu.this.getParent().getParent().getParent().getParent());				    
+					DeckSelect ds = new DeckSelect((JFrame) MainMenu.this.getParent().getParent().getParent().getParent(), p);				    
 					 
-					Deck d = ds.populateList(p);
+					Deck d = ds.getSelection();
 					System.out.println(d.getName());
 					btnQuickBattle.setEnabled(true);
 					btnCollectionManager.setEnabled(true);					

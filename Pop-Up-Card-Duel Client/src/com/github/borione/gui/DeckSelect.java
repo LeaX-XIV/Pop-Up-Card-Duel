@@ -9,6 +9,8 @@ import java.awt.Window;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
+import javax.swing.SwingWorker.StateValue;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 import javax.swing.JButton;
@@ -31,10 +33,13 @@ import javax.swing.JLabel;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import javax.swing.JComponent;
 
 import java.awt.GridLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class DeckSelect extends JDialog {
 
@@ -54,6 +59,7 @@ public class DeckSelect extends JDialog {
 	JButton btnNext;
 
 	Loading l;
+	Player p;
 	List<Deck> decks;
 	private JPanel pagesPane;
 	List<JPanel> pages;
@@ -67,8 +73,8 @@ public class DeckSelect extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DeckSelect frame = new DeckSelect(new JFrame());
-					frame.populateList(Player.factory("LeaX_XIV"));
+					DeckSelect frame = new DeckSelect(new JFrame(), Player.factory("LeaX_XIV"));
+					frame.getSelection();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,13 +85,11 @@ public class DeckSelect extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public DeckSelect(JFrame frame) {
+	public DeckSelect(JFrame frame, Player p) {
 		super(frame, "deck");
-		//		setResizable(false);
-
-//		setAlwaysOnTop(true);
-		setUndecorated(true);
-//		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.p = p;
+		setModal(true);
+		//		setUndecorated(true);
 		setBounds(100, 100, 629, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -112,7 +116,6 @@ public class DeckSelect extends JDialog {
 		btnClose.setPreferredSize(new Dimension(30, 30));
 		btnClose.setSize(new Dimension(30, 30));
 		
-		l = new Loading("Loading decks.");
 		panel.add(btnClose, BorderLayout.EAST);
 
 		panel_2 = new JPanel();
@@ -124,6 +127,7 @@ public class DeckSelect extends JDialog {
 		btnChoose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				isSelected = true;
 				synchronized (isSelected) {
 					if(sentaku != -1) {
 						isSelected.notify();
@@ -209,50 +213,25 @@ public class DeckSelect extends JDialog {
 		panel_1.add(pagesPane, BorderLayout.CENTER);
 		pagesPane.setLayout(new BorderLayout(0, 0));		
 
-		pages = new ArrayList<JPanel>();
-		
-		setVisible(true);
+		pages = new ArrayList<JPanel>();		
 	}
 
-	// FIXME: BOOM
-	public Deck populateList(Player p) {
-		decks = p.retriveDecks();
-		JPanel p1 = new JPanel(new GridLayout(2, 0));
-		for(int i = 0; i < decks.size(); i++) {
-			if(i % 2 == 0 && i != 0) {
-				pages.add(p1);
-				p1 = new JPanel(new GridLayout(2, 0));
-			}
-			Deck deck = decks.get(i);
-			DeckDescription dd = new DeckDescription(deck, i+1);
-			dd.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					sentaku = dd.getNumber();
-					isSelected = true;
-					for (JPanel page : pages) {
-						Component[] decki = page.getComponents();
-						for (Component deck : decki) {
-							((JComponent) deck).setBorder(null);
-						}
-					}
-					dd.setBorder(new LineBorder(Color.BLACK, 3, true));
-				}
-			});
-			p1.add(dd);
-			System.out.println("Aggiunto deck " + deck.getName());
-		}
-		pages.add(p1);
+	public Deck getSelection() {
+		
+		TwoWorker task = new TwoWorker();
+		task.addPropertyChangeListener(new PropertyChangeListener() {
 
-		selectedPage = 0;
-		pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
-		lblPagine.setText((selectedPage + 1) + "/" + pages.size());
-		btnPrevious.setEnabled(false);
+	        @Override
+	        public void propertyChange(PropertyChangeEvent e) {
+	            if (StateValue.DONE.equals(e.getPropertyName())) {
+	                task.done();
+	            }
+	        }
+	    });
+		task.execute();
 		
-		repaint();
-		revalidate();
-		
-		l.stop();
+		setVisible(true);
+//		l = new Loading("Loading decks.");		
 		
 		synchronized (isSelected){
 			while(!isSelected) {
@@ -267,6 +246,64 @@ public class DeckSelect extends JDialog {
 			dispose();
 
 			return decks.get(sentaku - 1);
+		}
+	}
+
+	private class TwoWorker extends SwingWorker<List<Deck>, Deck> {
+
+
+		@Override
+		protected List<Deck> doInBackground() throws Exception {
+			decks = p.retriveDecks();
+			
+			return decks;
+		}
+
+		@Override
+		protected void done() {
+			JPanel p1 = new JPanel(new GridLayout(2, 0));
+			try {
+				for(int i = 0; i < get().size(); i++) {
+					if(i % 2 == 0 && i != 0) {
+						pages.add(p1);
+						p1 = new JPanel(new GridLayout(2, 0));
+					}
+					Deck deck = decks.get(i);
+					DeckDescription dd = new DeckDescription(deck, i+1);
+					dd.addMouseListener(new MouseAdapter() {
+						@Override
+						public void mouseClicked(MouseEvent e) {
+							sentaku = dd.getNumber();
+							for (JPanel page : pages) {
+								Component[] decki = page.getComponents();
+								for (Component deck : decki) {
+									((JComponent) deck).setBorder(null);
+								}
+							}
+							dd.setBorder(new LineBorder(Color.BLACK, 3, true));
+						}
+					});
+					p1.add(dd);
+					System.out.println("Aggiunto deck " + deck.getName());
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ExecutionException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			pages.add(p1);
+
+			selectedPage = 0;
+			pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
+			lblPagine.setText((selectedPage + 1) + "/" + pages.size());
+			btnPrevious.setEnabled(false);
+
+			repaint();
+			revalidate();
+			
+//			l.stop();
 		}
 	}
 }
