@@ -54,7 +54,6 @@ public class DeckSelect extends JDialog {
 	JButton btnNext;
 
 	Loading l;
-	Player p;
 	List<Deck> decks;
 	private JPanel pagesPane;
 	List<JPanel> pages;
@@ -68,7 +67,8 @@ public class DeckSelect extends JDialog {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					DeckSelect frame = new DeckSelect(Player.factory("LeaX_XIV"));
+					DeckSelect frame = new DeckSelect(new JFrame());
+					frame.populateList(Player.factory("LeaX_XIV"));
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -79,15 +79,13 @@ public class DeckSelect extends JDialog {
 	/**
 	 * Create the frame.
 	 */
-	public DeckSelect(Player p) {
-//		super(frame, "deck");
-		l = new Loading("Loading decks.");
+	public DeckSelect(JFrame frame) {
+		super(frame, "deck");
 		//		setResizable(false);
-		this.p = p;
 
-		setAlwaysOnTop(true);
+//		setAlwaysOnTop(true);
 		setUndecorated(true);
-		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 629, 478);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -113,10 +111,8 @@ public class DeckSelect extends JDialog {
 		btnClose.setBorderPainted(false);
 		btnClose.setPreferredSize(new Dimension(30, 30));
 		btnClose.setSize(new Dimension(30, 30));
-
-	}
-
-	public Deck run() {
+		
+		l = new Loading("Loading decks.");
 		panel.add(btnClose, BorderLayout.EAST);
 
 		panel_2 = new JPanel();
@@ -214,35 +210,18 @@ public class DeckSelect extends JDialog {
 		pagesPane.setLayout(new BorderLayout(0, 0));		
 
 		pages = new ArrayList<JPanel>();
-		populateList();
-
-		l.stop();
-		setVisible(true);
 		
-		synchronized (isSelected){
-			while(!isSelected) {
-				try {
-					isSelected.wait();
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			
-			dispose();
-
-			return decks.get(sentaku - 1);
-		}
+		setVisible(true);
 	}
 
 	// FIXME: BOOM
-	public void populateList() {
+	public Deck populateList(Player p) {
 		decks = p.retriveDecks();
-		JPanel p = new JPanel(new GridLayout(2, 0));
+		JPanel p1 = new JPanel(new GridLayout(2, 0));
 		for(int i = 0; i < decks.size(); i++) {
 			if(i % 2 == 0 && i != 0) {
-				pages.add(p);
-				p = new JPanel(new GridLayout(2, 0));
+				pages.add(p1);
+				p1 = new JPanel(new GridLayout(2, 0));
 			}
 			Deck deck = decks.get(i);
 			DeckDescription dd = new DeckDescription(deck, i+1);
@@ -260,15 +239,34 @@ public class DeckSelect extends JDialog {
 					dd.setBorder(new LineBorder(Color.BLACK, 3, true));
 				}
 			});
-			p.add(dd);
+			p1.add(dd);
 			System.out.println("Aggiunto deck " + deck.getName());
 		}
-		pages.add(p);
+		pages.add(p1);
 
 		selectedPage = 0;
 		pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
 		lblPagine.setText((selectedPage + 1) + "/" + pages.size());
 		btnPrevious.setEnabled(false);
+		
 		repaint();
+		revalidate();
+		
+		l.stop();
+		
+		synchronized (isSelected){
+			while(!isSelected) {
+				try {
+					isSelected.wait();
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+
+			dispose();
+
+			return decks.get(sentaku - 1);
+		}
 	}
 }
