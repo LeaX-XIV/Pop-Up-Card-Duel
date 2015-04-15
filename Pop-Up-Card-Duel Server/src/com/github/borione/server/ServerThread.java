@@ -77,14 +77,14 @@ public class ServerThread extends Thread {
 			}
 		} else if(command.startsWith(TypeRequest.LOGIN.toString())) {
 			Player p = (Player) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
-			if(parent.getLogged().contains(p)) {
+//			if(parent.getLogged().contains(p)) {
 				
 				p.setLastLogin(new Timestamp(new Date().getTime()));
 				PlayerManager pm = new PlayerManager();
 
 				boolean result = false;
 				
-				if(parent.getLogged().contains(p.getUser())) {
+				if(!parent.getLogged().contains(p.getUser())) {
 					result = pm.updatePlayer(p);
 				}
 
@@ -96,7 +96,7 @@ public class ServerThread extends Thread {
 				} else {
 					return Consts.ERROR + Consts.SEPARATOR + command;
 				}
-			}
+//			}
 		}
 
 		return command;
