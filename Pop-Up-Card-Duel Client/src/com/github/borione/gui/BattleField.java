@@ -1,13 +1,9 @@
 package com.github.borione.gui;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import java.awt.GridLayout;
 
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import java.awt.FlowLayout;
@@ -18,6 +14,7 @@ import javax.swing.JProgressBar;
 import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
+import com.github.borione.gui.components.ColoredProgressBar;
 import com.github.borione.util.Consts;
 import com.github.borione.util.ImageUtils;
 
@@ -29,7 +26,6 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URL;
 
 public class BattleField extends JPanel {
 	
@@ -48,7 +44,7 @@ public class BattleField extends JPanel {
 		
 		JPanel opponentPane = new JPanel();
 		add(opponentPane);
-		opponentPane.setLayout(new MigLayout("", "[275px][515px][275px,grow]", "[240.00,grow]"));
+		opponentPane.setLayout(new MigLayout("", "[275.00px][515.00][275.00,grow]", "[240.00px,grow]"));
 		
 		JPanel opponentDeckPane = new JPanel();
 		opponentPane.add(opponentDeckPane, "cell 0 0,grow");
@@ -83,9 +79,13 @@ public class BattleField extends JPanel {
 		opponentAvatar.setPreferredSize(new Dimension(100, 100));
 		opponentAvatar.setMinimumSize(new Dimension(100, 100));
 		
-		JProgressBar opponentHP = new JProgressBar();
+		ColoredProgressBar opponentHP = new ColoredProgressBar();
+		opponentHP.setMaximum(20);
+		opponentHP.addColorRange(0.0, Color.RED);
+		opponentHP.addColorRange(0.25, Color.YELLOW);
+		opponentHP.addColorRange(0.5, Color.GREEN);
 		panel.add(opponentHP);
-		opponentHP.setForeground(Color.GREEN);
+		opponentHP.setValue(6);
 		
 		JPanel opponentColorCardPane = new JPanel();
 		opponentColorCardPane.setSize(new Dimension(0, 50));
@@ -129,8 +129,13 @@ public class BattleField extends JPanel {
 		selfAvatar.setMinimumSize(new Dimension(100, 100));
 		selfAvatarPane.add(selfAvatar);
 		
-		JProgressBar selfHP = new JProgressBar();
-		selfHP.setForeground(Color.GREEN);
+		ColoredProgressBar selfHP = new ColoredProgressBar();
+		selfHP.setMaximum(20);
+		selfHP.addColorRange(0.0, Color.RED);
+		selfHP.addColorRange(0.25, Color.YELLOW);
+		selfHP.addColorRange(0.5, Color.GREEN);
+		selfHP.setValue(13);
+		
 		selfAvatarPane.add(selfHP);
 		selfPane.add(selfAvatarPane, "cell 0 0,grow");
 		
