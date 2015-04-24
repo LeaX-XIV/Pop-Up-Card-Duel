@@ -33,7 +33,7 @@ public class Duel {
 	public static Duel factory(int id) {
 		Duel duel = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM duels WHERE id = " + id + ";");
 			if(rs.next()) {

@@ -33,7 +33,7 @@ public class Action {
 	public static Action factory(int id) {
 		Action action = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM actions WHERE id = " + id + ";");
 			if(rs.next()) {

@@ -22,7 +22,7 @@ public class CpCost {
 	public static CpCost factory(int card, Color cp) {
 		CpCost cpCost = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE card = " + card + " AND cp = '" + cp + "';");
 			if(rs.next()) {

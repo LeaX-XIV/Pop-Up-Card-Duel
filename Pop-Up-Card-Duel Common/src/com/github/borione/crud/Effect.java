@@ -28,7 +28,7 @@ public class Effect {
 	public static Effect factory(int id) {
 		Effect effect = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM effects WHERE id = " + id + ";");
 			if(rs.next()) {

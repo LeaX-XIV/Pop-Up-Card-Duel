@@ -19,7 +19,7 @@ public class Esper {
 	public static Esper factory(int id) {
 		Esper esper = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM espers WHERE id = " + id + ";");
 			if(rs.next()) {

@@ -9,7 +9,6 @@ import javax.swing.ImageIcon;
 import java.awt.FlowLayout;
 
 import javax.swing.JLabel;
-import javax.swing.JProgressBar;
 
 import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Deck;
@@ -26,6 +25,9 @@ import net.miginfocom.swing.MigLayout;
 import java.awt.BorderLayout;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.border.LineBorder;
 
 public class BattleField extends JPanel {
 	
@@ -44,16 +46,19 @@ public class BattleField extends JPanel {
 		
 		JPanel opponentPane = new JPanel();
 		add(opponentPane);
-		opponentPane.setLayout(new MigLayout("", "[275.00px][515.00][275.00,grow]", "[240.00px,grow]"));
+		opponentPane.setLayout(new MigLayout("", "[275.00px][515.00,grow][275.00]", "[240.00px,grow]"));
 		
 		JPanel opponentDeckPane = new JPanel();
+		opponentDeckPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentDeckPane, "cell 0 0,grow");
 		
 		JPanel opponentHandPane = new JPanel();
+		opponentHandPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentHandPane, "cell 1 0,grow");
 		opponentHandPane.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JPanel opponentAvatarPane = new JPanel();
+		opponentAvatarPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentAvatarPane, "cell 2 0,grow");
 		opponentAvatarPane.setLayout(new BorderLayout(0, 0));
 		
@@ -74,7 +79,6 @@ public class BattleField extends JPanel {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		panel.add(opponentAvatar);
 		opponentAvatar.setSize(new Dimension(100, 100));
 		opponentAvatar.setPreferredSize(new Dimension(100, 100));
 		opponentAvatar.setMinimumSize(new Dimension(100, 100));
@@ -84,8 +88,28 @@ public class BattleField extends JPanel {
 		opponentHP.addColorRange(0.0, Color.RED);
 		opponentHP.addColorRange(0.25, Color.YELLOW);
 		opponentHP.addColorRange(0.5, Color.GREEN);
-		panel.add(opponentHP);
 		opponentHP.setValue(6);
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap(41, Short.MAX_VALUE)
+					.addComponent(opponentAvatar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap((275 / 2) - (100 / 2)))
+				.addGroup(gl_panel.createSequentialGroup()
+					.addContainerGap(18, Short.MAX_VALUE)
+					.addComponent(opponentHP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap((275 / 2) - (146 / 2)))
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_panel.createSequentialGroup()
+					.addGap(20)
+					.addComponent(opponentAvatar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5)
+					.addComponent(opponentHP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+		);
+		panel.setLayout(gl_panel);
 		
 		JPanel opponentColorCardPane = new JPanel();
 		opponentColorCardPane.setSize(new Dimension(0, 50));
@@ -104,11 +128,10 @@ public class BattleField extends JPanel {
 		
 		JPanel selfPane = new JPanel();
 		add(selfPane);
-		selfPane.setLayout(new MigLayout("", "[270.00px][515.00][275.00,grow]", "[240.00px,grow]"));
+		selfPane.setLayout(new MigLayout("", "[270.00px][515.00,grow,fill][275.00]", "[240.00px,grow]"));
 		
 		JPanel selfAvatarPane = new JPanel();
-		FlowLayout fl_selfAvatarPane = new FlowLayout(FlowLayout.CENTER, 5, 5);
-		selfAvatarPane.setLayout(fl_selfAvatarPane);
+		selfAvatarPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
 		JLabel selfAvatar = new JLabel("");
 		try {
@@ -127,7 +150,6 @@ public class BattleField extends JPanel {
 		selfAvatar.setPreferredSize(new Dimension(100, 100));
 		selfAvatar.setSize(new Dimension(100, 100));
 		selfAvatar.setMinimumSize(new Dimension(100, 100));
-		selfAvatarPane.add(selfAvatar);
 		
 		ColoredProgressBar selfHP = new ColoredProgressBar();
 		selfHP.setMaximum(20);
@@ -135,16 +157,36 @@ public class BattleField extends JPanel {
 		selfHP.addColorRange(0.25, Color.YELLOW);
 		selfHP.addColorRange(0.5, Color.GREEN);
 		selfHP.setValue(13);
-		
-		selfAvatarPane.add(selfHP);
 		selfPane.add(selfAvatarPane, "cell 0 0,grow");
+		GroupLayout gl_selfAvatarPane = new GroupLayout(selfAvatarPane);
+		gl_selfAvatarPane.setHorizontalGroup(
+			gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_selfAvatarPane.createSequentialGroup()
+					.addGap((275 / 2) - (100 / 2))
+					.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(40, Short.MAX_VALUE))
+				.addGroup(gl_selfAvatarPane.createSequentialGroup()
+					.addGap((275 / 2) - (146 / 2))
+					.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
+					.addContainerGap(17, Short.MAX_VALUE))
+		);
+		gl_selfAvatarPane.setVerticalGroup(
+			gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
+				.addGroup(gl_selfAvatarPane.createSequentialGroup()
+					.addGap(20)
+					.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5)
+					.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+		);
+		selfAvatarPane.setLayout(gl_selfAvatarPane);
 		
 		JPanel selfHandPane = new JPanel();
+		selfHandPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		selfPane.add(selfHandPane, "cell 1 0,grow");
 		selfHandPane.setLayout(new GridLayout(0, 3, 0, 0));
 		
 		JPanel selfDeckPane = new JPanel();
+		selfDeckPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		selfPane.add(selfDeckPane, "cell 2 0,grow");
-
 	}
 }

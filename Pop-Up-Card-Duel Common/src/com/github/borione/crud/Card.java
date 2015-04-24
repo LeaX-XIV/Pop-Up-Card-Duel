@@ -46,7 +46,7 @@ public class Card implements Sendable {
 	public static Card factory(int id) {
 		Card card = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cards WHERE id = " + id + ";");
 			if(rs.next()) {
@@ -114,7 +114,7 @@ public class Card implements Sendable {
 		List<CpCost> costs = new ArrayList<CpCost>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE card = '" + getId() + "';");
 
@@ -132,7 +132,7 @@ public class Card implements Sendable {
 		List<Action> actions = new ArrayList<Action>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM card_action WHERE card = '" + getId() + "';");
 
@@ -150,7 +150,7 @@ public class Card implements Sendable {
 		Effect effect = null;
 
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT effect FROM effect_card WHERE card = '" + getId() + "' AND importance = 'PRIMARY';");
 

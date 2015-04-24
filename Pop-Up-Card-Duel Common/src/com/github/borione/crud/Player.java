@@ -52,7 +52,7 @@ public class Player implements Sendable {
 	public static Player factory(String user) throws IllegalArgumentException {
 		Player player = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM players WHERE user = '" + user + "';");
 			if(rs.next()) {
@@ -185,7 +185,7 @@ public class Player implements Sendable {
 		List<Card> collection = new ArrayList<Card>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM collections WHERE player = '" + getUser() + "';");
 
@@ -203,7 +203,7 @@ public class Player implements Sendable {
 		List<Deck> decks = new ArrayList<Deck>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT id FROM decks WHERE player = '" + getUser() + "';");
 			while(rs.next()) {
@@ -224,7 +224,7 @@ public class Player implements Sendable {
 		List<Duel> duels = new ArrayList<Duel>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT DISTINCT id FROM duels WHERE player1 = '" + getUser() + "' OR player2 = '" + getUser() + "';");
 			while(rs.next()) {

@@ -53,6 +53,7 @@ public class MainGui extends JFrame {
 		contentPane.add(panel, BorderLayout.NORTH);
 		
 		btnClose = new JButton("");
+		btnClose.setFocusPainted(false);
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {

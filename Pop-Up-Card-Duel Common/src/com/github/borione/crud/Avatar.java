@@ -37,7 +37,7 @@ public class Avatar {
 	public static Avatar factory(int id) throws IllegalArgumentException {
 		Avatar avatar = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM avatars WHERE id = " + id + ";");
 			if(rs.next()) {

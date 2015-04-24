@@ -19,7 +19,7 @@ public class Possession {
 	public static Possession factory(String player, int card) throws IllegalArgumentException {
 		Possession possession = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM collections "
 					+ "WHERE player = '" + player + "' AND "

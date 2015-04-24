@@ -51,17 +51,7 @@ public class ColoredProgressBar extends JProgressBar {
 			}
 		});
 	}
-
-	@Override
-	public void setValue(int n) {
-		super.setValue(n);
-	}
 	
-	/**
-	 * 
-	 * @param start 
-	 * @param c
-	 */
 	public void addColorRange(double start, Color c) {
 		rangeColor.put(start, c);
 		keys.add(start);

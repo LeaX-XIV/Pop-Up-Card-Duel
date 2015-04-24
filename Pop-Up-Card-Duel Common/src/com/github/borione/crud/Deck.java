@@ -8,8 +8,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.connection.Sendable;
+import com.github.borione.util.Consts;
 
-public class Deck {
+public class Deck implements Sendable {
 
 	private int id;
 	private String player;
@@ -26,7 +28,7 @@ public class Deck {
 	public static Deck factory(int id) {
 		Deck deck = null;
 		try {
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM decks WHERE id = " + id + ";");
 			if(rs.next()) {
@@ -85,7 +87,7 @@ public class Deck {
 		List<Card> cards = new ArrayList<Card>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.DEFAULT.clone();
+			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
 			Statement stat = ct.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + " AND player = '" + player + "';");
 			while(rs.next()) {
@@ -138,6 +140,19 @@ public class Deck {
 		}
 		
 		return equals;
+	}
+
+	@Override
+	public String formatData() {
+		StringBuilder sb = new StringBuilder();
+		
+		sb.append(getClass().getName() + Consts.SEPARATOR);
+		sb.append(getId() + Consts.SEPARATOR);
+		sb.append(getPlayer() + Consts.SEPARATOR);
+		sb.append(getName() + Consts.SEPARATOR);
+		sb.append(getCreationDate().toString() + Consts.SEPARATOR);
+		
+		return sb.toString();
 	}
 
 }
