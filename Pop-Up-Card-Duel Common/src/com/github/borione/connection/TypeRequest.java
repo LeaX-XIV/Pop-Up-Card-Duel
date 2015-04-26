@@ -2,5 +2,7 @@ package com.github.borione.connection;
 
 public enum TypeRequest {
 		REGISTER,
-		LOGIN
+		LOGIN,
+		LOGOUT,
+		START_BATTLE
 }

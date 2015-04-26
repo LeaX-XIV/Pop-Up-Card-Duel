@@ -5,10 +5,15 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 import com.github.borione.connection.Sendable;
 import com.github.borione.connection.TypeRequest;
+import com.github.borione.crud.Card;
+import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.crud.management.PlayerManager;
 import com.github.borione.util.Consts;
@@ -97,6 +102,59 @@ public class ServerThread extends Thread {
 					return Consts.ERROR + Consts.SEPARATOR + command;
 				}
 //			}
+		} else if(command.startsWith(TypeRequest.START_BATTLE.toString())) {
+			Deck deck1 = (Deck) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
+			
+			/*
+			 * SEARCH FOR OPPONENT
+			 */
+			
+			List<Card> d2 = new ArrayList<Card>();
+			
+			for(int i = 0; i < 15; i++) {
+				d2.add(Card.factory(new Random().nextInt(127) + 1));
+			}
+			
+			// $ Deck ready
+			
+			try {
+				output.write(Consts.ALL_OK + "\r\n");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			
 		}
 
 		return command;

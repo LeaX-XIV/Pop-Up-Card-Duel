@@ -18,7 +18,7 @@ public class DeckManager {
 	private ConnectionTest conn;
 
 	public DeckManager() {
-		conn = ConnectionTest.DEFAULT.clone();
+		conn = ConnectionTest.SERVER_DEFAULT.clone();
 	}
 
 	public boolean addDeck(Deck deck) {

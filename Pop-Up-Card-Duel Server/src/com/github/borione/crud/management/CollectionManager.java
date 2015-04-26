@@ -13,7 +13,7 @@ public class CollectionManager {
 	ConnectionTest conn;
 
 	public CollectionManager() {
-		conn = ConnectionTest.DEFAULT.clone();
+		conn = ConnectionTest.SERVER_DEFAULT.clone();
 	}
 
 	public boolean addCardToCollection(Player player, Card card) {

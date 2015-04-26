@@ -14,6 +14,7 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 
+import com.github.borione.connection.TypeRequest;
 import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Card;
 import com.github.borione.crud.Deck;
@@ -33,7 +34,13 @@ import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.Font;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.List;
 
 import javax.swing.SwingConstants;
 
@@ -91,7 +98,59 @@ public class MainMenu extends JPanel implements ComponentListener {
 					DeckSelect ds = new DeckSelect((JFrame) MainMenu.this.getParent().getParent().getParent().getParent(), p);				    
 					 
 					Deck d = ds.getSelection();
-					System.out.println(d.getName());
+//					System.out.println(d.getName());
+					
+					try {
+						Socket sk = new Socket(Consts.SERVER, 31415);
+						DataOutputStream out = new DataOutputStream(sk.getOutputStream());
+						BufferedReader in = new BufferedReader(new InputStreamReader(sk.getInputStream()));
+						
+						out.writeBytes(TypeRequest.START_BATTLE.toString() + Consts.SEPARATOR +
+								d.formatData() + "\r\n");
+						
+						String answer = in.readLine();
+						
+						if(answer.equals(Consts.ALL_OK)) {
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+							
+						}
+						
+					} catch (UnknownHostException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
+					
 					btnQuickBattle.setEnabled(true);
 					btnCollectionManager.setEnabled(true);					
 				}

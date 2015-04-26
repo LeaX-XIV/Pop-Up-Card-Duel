@@ -19,21 +19,31 @@ import com.github.borione.util.ImageUtils;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Image;
 
 import net.miginfocom.swing.MigLayout;
 
 import java.awt.BorderLayout;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.MalformedURLException;
+import java.net.Socket;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
 
 public class BattleField extends JPanel {
 	
+	private Socket sk;
+	private DataOutputStream out;
+	private BufferedReader in;
+	
 	public static void main(String[] args) {
 		MainGui mg = new MainGui();
-		BattleField m1 = new BattleField(Player.factory("LeaX_XIV"), Deck.factory(1), Player.factory("CapraTheBest"), Deck.factory(2));
+		BattleField m1 = new BattleField(Player.factory("LeaX_XIV"), Deck.factory(1), new Socket());
 		mg.getContentPane().add(m1, BorderLayout.CENTER);
 		mg.setVisible(true);
 	}
@@ -41,8 +51,17 @@ public class BattleField extends JPanel {
 	/**
 	 * Create the panel.
 	 */
-	public BattleField(Player self, Deck selfDeck, Player opponent, Deck opponentDeck) {
+	public BattleField(Player self, Deck selfDeck, /*Player opponent, Deck opponentDeck*/ Socket sk) {
 		setLayout(new GridLayout(2, 0, 0, 0));
+		
+		this.sk = sk;
+		try {
+			this.out = new DataOutputStream(this.sk.getOutputStream());
+			this.in = new BufferedReader(new InputStreamReader(this.sk.getInputStream()));
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		JPanel opponentPane = new JPanel();
 		add(opponentPane);
@@ -67,7 +86,8 @@ public class BattleField extends JPanel {
 		
 		JLabel opponentAvatar = new JLabel("");
 		try {
-			String url = "http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + "/" + Avatar.factory(opponent.getAvatar()).getPath();
+			// $ Opponent Avatar
+			String url = "http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + "/" + "avatar.png";
 			opponentAvatar.setIcon(new ImageIcon(ImageUtils.resizeBetter(ImageUtils.getImageFromWeb(url), 100, 100)));
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
@@ -188,5 +208,19 @@ public class BattleField extends JPanel {
 		JPanel selfDeckPane = new JPanel();
 		selfDeckPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		selfPane.add(selfDeckPane, "cell 2 0,grow");
+		selfDeckPane.setLayout(new BorderLayout(0, 0));
+		
+		setVisible(true);
+		
+	}
+	
+	
+	public void populateView() {	
+		JLabel selfDeckBack = new JLabel("");
+		Image img = ImageUtils.readImage(BattleField.class.getResource("/images/cards/back.png").toString());
+		img = ImageUtils.resizeBetter(img, selfDeckPane.getWidth(), selfDeckPane.getHeight());
+		
+		selfDeckBack.setIcon(new ImageIcon(img));
+		selfDeckPane.add(selfDeckBack, BorderLayout.CENTER);
 	}
 }
