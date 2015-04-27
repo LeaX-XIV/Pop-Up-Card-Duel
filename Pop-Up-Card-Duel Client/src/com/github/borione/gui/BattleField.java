@@ -41,11 +41,30 @@ public class BattleField extends JPanel {
 	private DataOutputStream out;
 	private BufferedReader in;
 	
+	private JPanel opponentPane;
+	private JPanel opponentDeckPane;
+	private JPanel opponentHandPane;
+	private JPanel opponentAvatarPane;
+	private JPanel panel;
+	private JLabel opponentAvatar;
+	private ColoredProgressBar opponentHP;
+	private JPanel opponentColorCardPane;
+	private JLabel colorCard1Lbl;
+	private JLabel colorCard2Lbl;
+	private JLabel colorCard3Lbl;
+	private JPanel selfPane;
+	private JPanel selfAvatarPane;
+	private JLabel selfAvatar;
+	private ColoredProgressBar selfHP;
+	private JPanel selfHandPane;
+	private JPanel selfDeckPane;
+	
 	public static void main(String[] args) {
 		MainGui mg = new MainGui();
 		BattleField m1 = new BattleField(Player.factory("LeaX_XIV"), Deck.factory(1), new Socket());
 		mg.getContentPane().add(m1, BorderLayout.CENTER);
 		mg.setVisible(true);
+		m1.populateView();
 	}
 
 	/**
@@ -63,28 +82,28 @@ public class BattleField extends JPanel {
 			e1.printStackTrace();
 		}
 		
-		JPanel opponentPane = new JPanel();
+		opponentPane = new JPanel();
 		add(opponentPane);
 		opponentPane.setLayout(new MigLayout("", "[275.00px][515.00,grow][275.00]", "[240.00px,grow]"));
 		
-		JPanel opponentDeckPane = new JPanel();
+		opponentDeckPane = new JPanel();
 		opponentDeckPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentDeckPane, "cell 0 0,grow");
 		
-		JPanel opponentHandPane = new JPanel();
+		opponentHandPane = new JPanel();
 		opponentHandPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentHandPane, "cell 1 0,grow");
 		opponentHandPane.setLayout(new GridLayout(0, 3, 0, 0));
 		
-		JPanel opponentAvatarPane = new JPanel();
+		opponentAvatarPane = new JPanel();
 		opponentAvatarPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		opponentPane.add(opponentAvatarPane, "cell 2 0,grow");
 		opponentAvatarPane.setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
+		panel = new JPanel();
 		opponentAvatarPane.add(panel);
 		
-		JLabel opponentAvatar = new JLabel("");
+		opponentAvatar = new JLabel("");
 		try {
 			// $ Opponent Avatar
 			String url = "http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + "/" + "avatar.png";
@@ -103,7 +122,7 @@ public class BattleField extends JPanel {
 		opponentAvatar.setPreferredSize(new Dimension(100, 100));
 		opponentAvatar.setMinimumSize(new Dimension(100, 100));
 		
-		ColoredProgressBar opponentHP = new ColoredProgressBar();
+		opponentHP = new ColoredProgressBar();
 		opponentHP.setMaximum(20);
 		opponentHP.addColorRange(0.0, Color.RED);
 		opponentHP.addColorRange(0.25, Color.YELLOW);
@@ -131,29 +150,29 @@ public class BattleField extends JPanel {
 		);
 		panel.setLayout(gl_panel);
 		
-		JPanel opponentColorCardPane = new JPanel();
+		opponentColorCardPane = new JPanel();
 		opponentColorCardPane.setSize(new Dimension(0, 50));
 		opponentColorCardPane.setPreferredSize(new Dimension(10, 50));
 		opponentAvatarPane.add(opponentColorCardPane, BorderLayout.SOUTH);
 		opponentColorCardPane.setLayout(new GridLayout(0, 3, 0, 0));
 		
-		JLabel colorCard1Lbl = new JLabel("");
+		colorCard1Lbl = new JLabel("");
 		opponentColorCardPane.add(colorCard1Lbl);
 		
-		JLabel colorCard2Lbl = new JLabel("");
+		colorCard2Lbl = new JLabel("");
 		opponentColorCardPane.add(colorCard2Lbl);
 		
-		JLabel colorCard3Lbl = new JLabel("");
+		colorCard3Lbl = new JLabel("");
 		opponentColorCardPane.add(colorCard3Lbl);
 		
-		JPanel selfPane = new JPanel();
+		selfPane = new JPanel();
 		add(selfPane);
 		selfPane.setLayout(new MigLayout("", "[270.00px][515.00,grow,fill][275.00]", "[240.00px,grow]"));
 		
-		JPanel selfAvatarPane = new JPanel();
+		selfAvatarPane = new JPanel();
 		selfAvatarPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		
-		JLabel selfAvatar = new JLabel("");
+		selfAvatar = new JLabel("");
 		try {
 			String url = "http://" + Consts.SERVER + "/" + Consts.AVATAR_PATH + "/" + Avatar.factory(self.getAvatar()).getPath();
 			selfAvatar.setIcon(new ImageIcon(ImageUtils.resizeBetter(ImageUtils.getImageFromWeb(url), 100, 100)));
@@ -171,7 +190,7 @@ public class BattleField extends JPanel {
 		selfAvatar.setSize(new Dimension(100, 100));
 		selfAvatar.setMinimumSize(new Dimension(100, 100));
 		
-		ColoredProgressBar selfHP = new ColoredProgressBar();
+		selfHP = new ColoredProgressBar();
 		selfHP.setMaximum(20);
 		selfHP.addColorRange(0.0, Color.RED);
 		selfHP.addColorRange(0.25, Color.YELLOW);
@@ -200,18 +219,17 @@ public class BattleField extends JPanel {
 		);
 		selfAvatarPane.setLayout(gl_selfAvatarPane);
 		
-		JPanel selfHandPane = new JPanel();
+		selfHandPane = new JPanel();
 		selfHandPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		selfPane.add(selfHandPane, "cell 1 0,grow");
 		selfHandPane.setLayout(new GridLayout(0, 3, 0, 0));
 		
-		JPanel selfDeckPane = new JPanel();
+		selfDeckPane = new JPanel();
 		selfDeckPane.setBorder(new LineBorder(new Color(0, 0, 0)));
 		selfPane.add(selfDeckPane, "cell 2 0,grow");
 		selfDeckPane.setLayout(new BorderLayout(0, 0));
 		
 		setVisible(true);
-		
 	}
 	
 	

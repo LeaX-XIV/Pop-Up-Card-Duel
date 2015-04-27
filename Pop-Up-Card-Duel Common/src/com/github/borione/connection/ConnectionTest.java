@@ -11,7 +11,7 @@ import com.github.borione.util.Consts;
 public class ConnectionTest implements Cloneable {
 	
 	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
-	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, "root", "");
+	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private String address;
 	private String db;

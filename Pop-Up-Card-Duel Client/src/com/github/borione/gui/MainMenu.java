@@ -111,19 +111,8 @@ public class MainMenu extends JPanel implements ComponentListener {
 						String answer = in.readLine();
 						
 						if(answer.equals(Consts.ALL_OK)) {
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
-							
+							MainMenu.this.getParent().getParent().getParent().getParent().remove(MainMenu.this);
+							MainMenu.this.getParent().getParent().getParent().getParent().add(new BattleField(p, d, sk));
 						}
 						
 					} catch (UnknownHostException e1) {
