@@ -16,7 +16,7 @@ public class PlayerManager {
 	private ConnectionTest conn;
 
 	public PlayerManager() {
-		conn = ConnectionTest.SERVER_DEFAULT.clone();
+		conn = ConnectionTest.DEFAULT.clone();
 	}
 
 	public boolean addPlayer(Player player) {

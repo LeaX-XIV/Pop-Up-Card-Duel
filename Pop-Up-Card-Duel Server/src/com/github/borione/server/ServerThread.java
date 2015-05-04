@@ -21,7 +21,7 @@ import com.github.borione.util.Consts;
 public class ServerThread extends Thread {
 
 	private Socket connection;
-	private InputStream input;
+	private InputStream  input;
 	private OutputStreamWriter output;
 	private TcpServer parent;
 
@@ -65,7 +65,6 @@ public class ServerThread extends Thread {
 		} catch(IOException e) {
 			// Do nothing
 		}
-
 	}
 
 	private String serve(String command) {
@@ -82,79 +81,81 @@ public class ServerThread extends Thread {
 			}
 		} else if(command.startsWith(TypeRequest.LOGIN.toString())) {
 			Player p = (Player) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
-//			if(parent.getLogged().contains(p)) {
-				
-				p.setLastLogin(new Timestamp(new Date().getTime()));
-				PlayerManager pm = new PlayerManager();
+			//			if(parent.getLogged().contains(p)) {
 
-				boolean result = true;
-				
-//				if(!parent.getLogged().contains(p.getUser())) {
-//					result = pm.updatePlayer(p);
-//				}
+			p.setLastLogin(new Timestamp(new Date().getTime()));
+			PlayerManager pm = new PlayerManager();
 
-				if(result) {
-					parent.login(p.getUser());
-					System.out.println(new Date().toString() + ": " + p.getName() + " logged in.");
-					System.out.println("Online players: " + parent.getLogged().toString());
-					return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
-				} else {
-					return Consts.ERROR + Consts.SEPARATOR + command;
-				}
-//			}
+			boolean result = false;
+
+			if(!parent.getLogged().contains(p.getUser())) {
+				result = pm.updatePlayer(p);
+			}
+
+			if(result) {
+				parent.login(this.connection.getInetAddress() + ":" + this.connection.getPort(), p.getUser());
+				System.out.println(new Date().toString() + ": " + p.getName() + " logged in.");
+				System.out.println("Online players: " + parent.getLogged().toString());
+				return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
+			} else {
+				return Consts.ERROR + Consts.SEPARATOR + command;
+			}
+			//			}
+		} else if(command.startsWith(TypeRequest.LOGOUT.toString())) {
+			parent.logout(this.connection.getInetAddress() + ":" + this.connection.getPort());
 		} else if(command.startsWith(TypeRequest.START_BATTLE.toString())) {
 			Deck deck1 = (Deck) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
-			
+
 			/*
 			 * SEARCH FOR OPPONENT
 			 */
-			
+
 			List<Card> d2 = new ArrayList<Card>();
-			
+
 			for(int i = 0; i < 15; i++) {
 				d2.add(Card.factory(new Random().nextInt(127) + 1));
 			}
-			
+
 			// $ Deck ready
-			
+
 			try {
-				output.write(Consts.ALL_OK + "\r\n");
+				output.write(Consts.ALL_OK + "\n");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 		}
 
 		return command;

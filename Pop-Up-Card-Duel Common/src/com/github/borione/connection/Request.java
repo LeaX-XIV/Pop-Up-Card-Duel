@@ -1,7 +1,9 @@
 package com.github.borione.connection;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetSocketAddress;
 import java.net.Socket;
@@ -36,59 +38,35 @@ public class Request {
 	}
 
 	public String send() throws IOException, SocketTimeoutException {
-		InputStream input;
+		BufferedReader input;
 		OutputStreamWriter output;
 
 		String command;
-		String character;
-		int i;
-		int n;
-		byte[] buffer = new byte[1024];
-		StringBuffer answer = new StringBuffer();
+		String answer;
 		Socket client = new Socket();
 		InetSocketAddress server = new InetSocketAddress(Consts.SERVER, Consts.SERVER_PORT);
 
 		// Connection request
 		client.connect(server, 1000);
-		input = client.getInputStream();
+		input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		output = new OutputStreamWriter(client.getOutputStream());
 
 		command = getType().toString() + Consts.SEPARATOR + getObject().formatData();
 
 		// Write
-		output.write(command + "\r\n");
+		output.write(command + "\n");
 		output.flush();
 		client.setSoTimeout(1000);
 
 		// Read
-		while((n = input.read(buffer)) != -1) {
-			if (n > 0) {
-				for(i = 0; i < n; i++) {
-					if(buffer[i] == '\r' || buffer[i] == '\n') {
-						// Check error in answer
-						if(answer.toString().startsWith(Consts.ALL_OK)) {	// Good
-							// XXX: Cose brutte
-							return answer.toString().replace("Â", "");
-						} else {	// Something went wrong
-							throw new IOException(answer.toString());
-						}
-					} else {	// Reading answer char by char
-						character = new String(buffer, i, 1, "ISO-8859-1");
-						if(character.toCharArray()[0] == (char) 189) {
-							continue;
-						}
-						answer.append(character);
-					}
-				}
-			}
-		}
+		answer = input.readLine();
 		
-		input.close();
-		output.close();
-		client.shutdownInput();
-		client.shutdownOutput();
-		client.close();
-		throw new IOException();
+		if(answer.startsWith(Consts.ALL_OK)) {	// Good
+			// XXX: Cose brutte
+			return answer.replace("Â", "");
+		} else {	// Something went wrong
+			throw new IOException(answer);
+		}
 
 	}
 }

@@ -14,7 +14,8 @@ public interface Sendable {
 	public abstract String formatData();
 	
 	public static Sendable reconstruct(String str) {
-		String[] args = str.split(Character.toString(Consts.SEPARATOR));
+		String sep = Character.toString(Consts.SEPARATOR);
+		String[] args = str.split(sep);
 		
 		try {
 			Class c = Class.forName(args[0]);

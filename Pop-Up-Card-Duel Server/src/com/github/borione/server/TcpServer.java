@@ -6,7 +6,9 @@ import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.github.borione.crud.Player;
 import com.github.borione.util.Consts;
@@ -14,10 +16,10 @@ import com.github.borione.util.Consts;
 public class TcpServer extends Thread {
 
 	private ServerSocket server;
-	private List<String> logged;
+	private Map<String, String> logged;
 
 	public TcpServer (int port) throws IOException {
-		logged = new ArrayList<String>();
+		logged = new HashMap<String, String>();
 		server = new ServerSocket(port);
 		server.setSoTimeout(1000);	// 1s
 	}
@@ -36,7 +38,7 @@ public class TcpServer extends Thread {
 			try {
 				// Wait for connection request (max wait 1 second)
 				connection = server.accept();
-				System.out.println(new Date().toString() + ": Request from " + connection.getInetAddress().toString() + ":" + connection.getPort());
+				System.out.println("[" + new Date().toString() + "] Request from " + connection.getInetAddress().toString() + ":" + connection.getPort());
 
 				Thread thread = new ServerThread(connection, this);
 				thread.start();
@@ -56,16 +58,12 @@ public class TcpServer extends Thread {
 		}
 	}
 	
-	public boolean login(String str) {
-		return logged.add(str);
+	public void login(String ip, String user) {
+		logged.put(ip, user);
 	}
 	
-	public boolean login(Player p) {
-		return logged.add(p.getUser());
-	}
-	
-	public void logout(String str) {
-		logged.remove(str);
+	public void logout(String ip) {
+		logged.remove(ip);
 	}
 	
 	public void logout(Player p) {
@@ -73,7 +71,13 @@ public class TcpServer extends Thread {
 	}
 	
 	public List<String> getLogged() {
-		return logged;
+		List<String> arList = new ArrayList<String>();
+		
+		for(Map.Entry<String,String> map : logged.entrySet()){
+		     arList.add(map.getValue());
+		}
+		
+		return arList;
 	}
 
 	public static void main(String[] args) {
