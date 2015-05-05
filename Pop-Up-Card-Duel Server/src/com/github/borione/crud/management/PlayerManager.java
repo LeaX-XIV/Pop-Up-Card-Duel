@@ -9,14 +9,14 @@ import java.util.List;
 
 import com.github.borione.crud.Player;
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 import com.github.borione.util.StringUtils;
 
 public class PlayerManager {
 
-	private ConnectionTest conn;
+	public static final ConnectionTest DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	public PlayerManager() {
-		conn = ConnectionTest.DEFAULT.clone();
 	}
 
 	public boolean addPlayer(Player player) {
@@ -26,7 +26,7 @@ public class PlayerManager {
 
 		if(player != null) {
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 
 				registration = (player.getRegistration() == null ? "NULL" : "'" + player.getRegistration().toString() + "'");
 				lastLogin = (player.getLastLogin() == null ? "NULL" : "'" + player.getLastLogin().toString() + "'");
@@ -68,7 +68,7 @@ public class PlayerManager {
 
 		if(player != null) {
 			try { // Check if the player exists
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 				String query = "SELECT COUNT(*) AS number FROM players "
 						+ "WHERE user = '" + player.getUser() + "';";
 				rs = stat.executeQuery(query);
@@ -90,7 +90,7 @@ public class PlayerManager {
 			}
 
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 				lastLogin = (player.getLastLogin() == null ? "NULL" : "'" + player.getLastLogin().toString() + "'");
 
 				String command = "UPDATE players SET "
@@ -130,7 +130,7 @@ public class PlayerManager {
 		String user;
 
 		try {
-			stat = conn.getConnection().createStatement();
+			stat = DEFAULT.getConnection().createStatement();
 			String query = "SELECT user FROM players;";
 			rs = stat.executeQuery(query);
 
@@ -161,7 +161,7 @@ public class PlayerManager {
 
 		if(player != null) {
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 				String command = "DELETE FROM players "
 						+ "WHERE user = '" + player.getUser() + "';";
 

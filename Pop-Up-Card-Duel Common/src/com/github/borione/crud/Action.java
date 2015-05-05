@@ -3,8 +3,10 @@ package com.github.borione.crud;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.concurrent.locks.Lock;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 enum Position {
 	UP,
@@ -20,6 +22,8 @@ enum Type {
 
 public class Action {
 	
+	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
+	
 	private int id;
 	private Position position;
 	private Type type;
@@ -33,8 +37,8 @@ public class Action {
 	public static Action factory(int id) {
 		Action action = null;
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			LOCAL_DEFAULT.openConnection();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM actions WHERE id = " + id + ";");
 			if(rs.next()) {
 				Position position = Position.valueOf(rs.getString("position"));
@@ -44,7 +48,7 @@ public class Action {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			LOCAL_DEFAULT.closeConnection();
 			return action;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No action was found with id = " + id);

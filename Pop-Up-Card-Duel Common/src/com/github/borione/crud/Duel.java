@@ -6,6 +6,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 enum Result {
 	WIN1,
@@ -15,6 +16,8 @@ enum Result {
 }
 
 public class Duel {
+	
+	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private int id;
 	private String player1;
@@ -33,8 +36,8 @@ public class Duel {
 	public static Duel factory(int id) {
 		Duel duel = null;
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM duels WHERE id = " + id + ";");
 			if(rs.next()) {
 				String player1 = rs.getString("player1");
@@ -46,7 +49,7 @@ public class Duel {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return duel;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No duel was found with id = " + id + ".");

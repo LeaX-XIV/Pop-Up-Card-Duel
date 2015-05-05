@@ -12,6 +12,8 @@ import com.github.borione.connection.Sendable;
 import com.github.borione.util.Consts;
 
 public class Deck implements Sendable {
+	
+	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	private int id;
 	private String player;
@@ -28,8 +30,8 @@ public class Deck implements Sendable {
 	public static Deck factory(int id) {
 		Deck deck = null;
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM decks WHERE id = " + id + ";");
 			if(rs.next()) {
 				String player = rs.getString("player");
@@ -40,7 +42,7 @@ public class Deck implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return deck;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No deck was found with id = " + id);
@@ -87,8 +89,8 @@ public class Deck implements Sendable {
 		List<Card> cards = new ArrayList<Card>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT DISTINCT card FROM collection_deck WHERE deck = " + id + " AND player = '" + player + "';");
 			while(rs.next()) {
 				int card = rs.getInt("card");
@@ -96,12 +98,12 @@ public class Deck implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
+			
+			return cards;
 		} catch (SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from db.");
 		}
-		
-		return cards;
 	}
 	
 	public int retriveNumberCards() {

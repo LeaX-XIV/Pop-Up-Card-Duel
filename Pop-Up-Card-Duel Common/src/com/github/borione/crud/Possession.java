@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 public class Possession {
+	
+	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private String player;
 	private int card;
@@ -19,8 +22,8 @@ public class Possession {
 	public static Possession factory(String player, int card) throws IllegalArgumentException {
 		Possession possession = null;
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM collections "
 					+ "WHERE player = '" + player + "' AND "
 					+ "card = " + card + ";");
@@ -30,7 +33,7 @@ public class Possession {
 			
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 		} catch(SQLException e) {
 			throw new IllegalArgumentException("Player " + player + " doesn't own card + " + card + ".");
 		}

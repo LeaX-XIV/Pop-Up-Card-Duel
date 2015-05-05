@@ -86,7 +86,8 @@ public class ServerThread extends Thread {
 			p.setLastLogin(new Timestamp(new Date().getTime()));
 			PlayerManager pm = new PlayerManager();
 
-			boolean result = false;
+			// XXX: FALSE
+			boolean result = true;
 
 			if(!parent.getLogged().contains(p.getUser())) {
 				result = pm.updatePlayer(p);

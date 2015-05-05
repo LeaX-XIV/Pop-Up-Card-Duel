@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 public class Avatar {
+	
+	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private int id;
 	private String name;
@@ -37,8 +40,8 @@ public class Avatar {
 	public static Avatar factory(int id) throws IllegalArgumentException {
 		Avatar avatar = null;
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM avatars WHERE id = " + id + ";");
 			if(rs.next()) {
 				String name = rs.getString("name");
@@ -49,7 +52,7 @@ public class Avatar {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return avatar;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No avatar was found with id = " + id);

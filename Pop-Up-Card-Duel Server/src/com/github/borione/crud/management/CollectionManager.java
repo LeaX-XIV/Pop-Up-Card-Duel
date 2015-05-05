@@ -7,13 +7,13 @@ import java.util.List;
 import com.github.borione.crud.Card;
 import com.github.borione.crud.Player;
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 public class CollectionManager {
 
-	ConnectionTest conn;
+	public static final ConnectionTest DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	public CollectionManager() {
-		conn = ConnectionTest.DEFAULT.clone();
 	}
 
 	public boolean addCardToCollection(Player player, Card card) {
@@ -32,7 +32,7 @@ public class CollectionManager {
 			Player p = Player.factory(player);
 			Card c = Card.factory(card);
 
-			stat = conn.getConnection().createStatement();
+			stat = DEFAULT.getConnection().createStatement();
 			String command = "INSERT INTO collections (player, card)"
 					+ "VALUE ('" + p.getUser() + "', " + c.getId() + ");";
 
@@ -82,7 +82,7 @@ public class CollectionManager {
 			Player p = Player.factory(player);
 			Card c = Card.factory(card);
 
-			stat = conn.getConnection().createStatement();
+			stat = DEFAULT.getConnection().createStatement();
 			String command = "DELETE FROM collections "
 					+ "WHERE player = '" + p.getUser() + "' AND "
 					+ "card = " + c.getId() + ";";

@@ -6,6 +6,8 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import sun.util.logging.resources.logging;
+
 import com.github.borione.connection.ConnectionTest;
 import com.github.borione.connection.Sendable;
 import com.github.borione.util.Consts;
@@ -24,6 +26,8 @@ enum Rarity {
 }
 
 public class Card implements Sendable {
+	
+	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
 
 	private int id;
 	private int esper;
@@ -46,8 +50,8 @@ public class Card implements Sendable {
 	public static Card factory(int id) {
 		Card card = null;
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			LOCAL_DEFAULT.openConnection();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cards WHERE id = " + id + ";");
 			if(rs.next()) {
 				int esper = rs.getInt("esper");
@@ -59,7 +63,7 @@ public class Card implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			LOCAL_DEFAULT.closeConnection();
 			return card;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No card was found with id = " + id);
@@ -114,53 +118,63 @@ public class Card implements Sendable {
 		List<CpCost> costs = new ArrayList<CpCost>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			LOCAL_DEFAULT.openConnection();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE card = '" + getId() + "';");
 
 			while(rs.next()) {
 				costs.add(CpCost.factory(rs.getInt("card"), Color.valueOf(rs.getString("cp"))));
 			}
+			
+			rs.close();
+			stat.close();
+			LOCAL_DEFAULT.closeConnection();
+			return costs;
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
 		}
-
-		return costs;
 	}
 
 	public List<Action> retriveActions() {
 		List<Action> actions = new ArrayList<Action>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			LOCAL_DEFAULT.openConnection();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM card_action WHERE card = '" + getId() + "';");
 
 			while(rs.next()) {
 				actions.add(Action.factory(rs.getInt("action")));
 			}
+			
+			rs.close();
+			stat.close();
+			LOCAL_DEFAULT.closeConnection();
+			return actions;
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
 		}
-
-		return actions;
 	}
 	
 	public Effect retrievePrimaryEffect() {
 		Effect effect = null;
 
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			LOCAL_DEFAULT.openConnection();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT effect FROM effect_card WHERE card = '" + getId() + "' AND importance = 'PRIMARY';");
 
 			rs.next();
 			effect = Effect.factory(rs.getInt("effect"));
+			
+			rs.close();
+			stat.close();
+			LOCAL_DEFAULT.closeConnection();
+			
+			return effect;
 		} catch(SQLException e) {
 			return null;
 		}
-
-		return effect;
 	}
 
 	@Override

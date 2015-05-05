@@ -5,8 +5,11 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 public class Esper {
+	
+	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
 	
 	private int id;
 	private String name;
@@ -19,8 +22,7 @@ public class Esper {
 	public static Esper factory(int id) {
 		Esper esper = null;
 		try {
-			ConnectionTest ct = ConnectionTest.LOCAL_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM espers WHERE id = " + id + ";");
 			if(rs.next()) {
 				String name = rs.getString("name");
@@ -29,7 +31,7 @@ public class Esper {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			LOCAL_DEFAULT.closeConnection();
 			return esper;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No esper was found with id = " + id);

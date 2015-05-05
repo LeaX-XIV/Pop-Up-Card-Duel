@@ -13,6 +13,8 @@ import com.github.borione.util.Consts;
 import com.github.borione.util.ListUtils;
 
 public class Player implements Sendable {
+	
+	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	private String user;
 	private String password;
@@ -52,8 +54,8 @@ public class Player implements Sendable {
 	public static Player factory(String user) throws IllegalArgumentException {
 		Player player = null;
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM players WHERE user = '" + user + "';");
 			if(rs.next()) {
 				String password = rs.getString("password");
@@ -67,7 +69,7 @@ public class Player implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return player;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No player was found with user = " + user);
@@ -185,26 +187,31 @@ public class Player implements Sendable {
 		List<Card> collection = new ArrayList<Card>();
 
 		try {
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM collections WHERE player = '" + getUser() + "';");
 
 			while(rs.next()) {
 				collection.add(Card.factory(rs.getInt("card")));
 			}
+			
+			rs.close();
+			stat.close();
+			SERVER_DEFAULT.closeConnection();
+
+			return collection;
+			
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
 		}
-
-		return collection;
 	}
 
 	public List<Deck> retriveDecks() {
 		List<Deck> decks = new ArrayList<Deck>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT id FROM decks WHERE player = '" + getUser() + "';");
 			while(rs.next()) {
 				int deck = rs.getInt("id");
@@ -212,20 +219,20 @@ public class Player implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
+			
+			return decks;
 		} catch (SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from db.");
 		}
-
-		return decks;
 	}
 
 	public List<Duel> retriveDuels() {
 		List<Duel> duels = new ArrayList<Duel>();
 
 		try {		
-			ConnectionTest ct = ConnectionTest.SERVER_DEFAULT.clone();
-			Statement stat = ct.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT DISTINCT id FROM duels WHERE player1 = '" + getUser() + "' OR player2 = '" + getUser() + "';");
 			while(rs.next()) {
 				int id = rs.getInt("id");
@@ -233,12 +240,12 @@ public class Player implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			ct.closeConnection();
+			SERVER_DEFAULT.closeConnection();
+			
+			return duels;
 		} catch (SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from db.");
 		}
-
-		return duels;
 	}
 
 	public List<Duel> retriveWins() {

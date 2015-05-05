@@ -12,13 +12,13 @@ import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.crud.Possession;
 import com.github.borione.connection.ConnectionTest;
+import com.github.borione.util.Consts;
 
 public class DeckManager {
 
-	private ConnectionTest conn;
+	public static final ConnectionTest DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	public DeckManager() {
-		conn = ConnectionTest.DEFAULT.clone();
 	}
 
 	public boolean addDeck(Deck deck) {
@@ -27,7 +27,7 @@ public class DeckManager {
 
 		if(deck != null) {
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 
 				creation = deck.getCreationDate().toString();
 				// With this I'm sure the player exists
@@ -66,7 +66,7 @@ public class DeckManager {
 		if(deck != null) {
 			try {
 				Deck.factory(deck.getId());	// Check deck existence
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 
 				String command = "UPDATE decks SET "
 						+ "name = '" + deck.getName() + "' "
@@ -102,7 +102,7 @@ public class DeckManager {
 		int id;
 
 		try {
-			stat = conn.getConnection().createStatement();
+			stat = DEFAULT.getConnection().createStatement();
 			String query = "SELECT id FROM decks;";
 			rs = stat.executeQuery(query);
 
@@ -132,7 +132,7 @@ public class DeckManager {
 
 		if(deck != null) {
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 				String command = "DELETE FROM decks "
 						+ "WHERE id = " + deck.getId() + ";";
 
@@ -161,7 +161,7 @@ public class DeckManager {
 		Statement stat = null;
 
 		try {
-			stat = conn.getConnection().createStatement();
+			stat = DEFAULT.getConnection().createStatement();
 
 			// Checking if records exist
 			Possession.factory(player, card);
@@ -212,7 +212,7 @@ public class DeckManager {
 			Statement stat = null;
 			
 			try {
-				stat = conn.getConnection().createStatement();
+				stat = DEFAULT.getConnection().createStatement();
 				
 				String command = sbCommand.toString();
 				
