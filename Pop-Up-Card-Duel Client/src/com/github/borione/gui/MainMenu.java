@@ -20,6 +20,7 @@ import com.github.borione.crud.Card;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
+import com.github.borione.main.Main;
 import com.github.borione.util.Consts;
 import com.github.borione.util.FontUtils;
 import com.github.borione.util.ImageUtils;
@@ -40,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.List;
 
 import javax.swing.SwingConstants;
 
@@ -83,7 +83,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 
 		lblName = new JLabel(p.getName());
 		lblName.setHorizontalAlignment(SwingConstants.CENTER);
-		lblName.setFont(new Font("Bleeding Cowboys", Font.PLAIN, 6));
+		lblName.setFont(Main.defaultFont);
 		lblName.setBorder(new LineBorder(new Color(0, 0, 0)));
 		lblName.setMaximumSize(new Dimension(400, 50));
 		lblName.setPreferredSize(new Dimension(100, 20));
@@ -111,8 +111,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 						String answer = in.readLine();
 						
 						if(answer.equals(Consts.ALL_OK)) {
-							MainMenu.this.getParent().getParent().getParent().getParent().add(new BattleField(p, d, sk), BorderLayout.CENTER);
-							MainMenu.this.getParent().getParent().getParent().getParent().remove(MainMenu.this);
+							changeToBattle(d, sk);
 						}
 						
 					} catch (UnknownHostException e1) {
@@ -249,5 +248,12 @@ public class MainMenu extends JPanel implements ComponentListener {
 
 	@Override
 	public void componentShown(ComponentEvent e) {
+	}
+	
+	private void changeToBattle(Deck d, Socket sk) {
+		MainMenu.this.getParent().add(new BattleField(p, d, sk), BorderLayout.CENTER);
+		MainMenu.this.getParent().remove(MainMenu.this);
+		revalidate();
+		repaint();
 	}
 }

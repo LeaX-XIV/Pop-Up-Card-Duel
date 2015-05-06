@@ -9,7 +9,7 @@ import com.github.borione.util.Consts;
 
 public class Esper {
 	
-	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
+	public static ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 	
 	private int id;
 	private String name;
@@ -22,7 +22,8 @@ public class Esper {
 	public static Esper factory(int id) {
 		Esper esper = null;
 		try {
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM espers WHERE id = " + id + ";");
 			if(rs.next()) {
 				String name = rs.getString("name");
@@ -31,7 +32,7 @@ public class Esper {
 			}
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return esper;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No esper was found with id = " + id);

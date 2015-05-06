@@ -94,7 +94,7 @@ public class ServerThread extends Thread {
 			}
 
 			if(result) {
-				parent.login(this.connection.getInetAddress() + ":" + this.connection.getPort(), p.getUser());
+				parent.login(this.connection.getInetAddress().toString(), p.getUser());
 				System.out.println(new Date().toString() + ": " + p.getName() + " logged in.");
 				System.out.println("Online players: " + parent.getLogged().toString());
 				return Consts.ALL_OK + Consts.SEPARATOR + Player.factory(p.getUser()).formatData();
@@ -103,7 +103,7 @@ public class ServerThread extends Thread {
 			}
 			//			}
 		} else if(command.startsWith(TypeRequest.LOGOUT.toString())) {
-			parent.logout(this.connection.getInetAddress() + ":" + this.connection.getPort());
+			parent.logout(this.connection.getInetAddress().toString());
 		} else if(command.startsWith(TypeRequest.START_BATTLE.toString())) {
 			Deck deck1 = (Deck) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
 
@@ -114,7 +114,7 @@ public class ServerThread extends Thread {
 			List<Card> d2 = new ArrayList<Card>();
 
 			for(int i = 0; i < 15; i++) {
-				d2.add(Card.factory(new Random().nextInt(127) + 1));
+				d2.add((Card) Card.factory(new Random().nextInt(127) + 1));
 			}
 
 			// $ Deck ready

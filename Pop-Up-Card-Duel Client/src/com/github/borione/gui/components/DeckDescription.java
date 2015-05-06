@@ -7,13 +7,11 @@ import javax.swing.JPanel;
 import java.awt.BorderLayout;
 
 import javax.swing.JLabel;
-import javax.swing.border.LineBorder;
 
 import com.github.borione.crud.Card;
 import com.github.borione.crud.CardColor;
 import com.github.borione.crud.Deck;
 
-import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.FlowLayout;
 import java.util.List;

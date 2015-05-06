@@ -8,6 +8,10 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JButton;
 import javax.swing.ImageIcon;
+
+import com.github.borione.connection.Request;
+import com.github.borione.connection.TypeRequest;
+
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -57,6 +61,7 @@ public class MainGui extends JFrame {
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				new Request(TypeRequest.LOGOUT, null);
 				System.exit(0);
 			}
 		});

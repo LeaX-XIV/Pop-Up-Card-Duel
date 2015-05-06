@@ -14,7 +14,7 @@ import com.github.borione.util.ListUtils;
 
 public class Player implements Sendable {
 	
-	public static final ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
+	public static ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	private String user;
 	private String password;

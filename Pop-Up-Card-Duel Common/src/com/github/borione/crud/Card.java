@@ -13,21 +13,9 @@ import com.github.borione.connection.Sendable;
 import com.github.borione.util.Consts;
 import com.github.borione.util.ListUtils;
 
-enum Rarity {
-	D,
-	C,
-	B,
-	A,
-	S,
-	SS,
-	SSS,
-	SSSS,
-	SSSSS
-}
-
 public class Card implements Sendable {
 	
-	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
+	public static ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	private int id;
 	private int esper;
@@ -50,8 +38,8 @@ public class Card implements Sendable {
 	public static Card factory(int id) {
 		Card card = null;
 		try {
-			LOCAL_DEFAULT.openConnection();
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cards WHERE id = " + id + ";");
 			if(rs.next()) {
 				int esper = rs.getInt("esper");
@@ -63,7 +51,7 @@ public class Card implements Sendable {
 			}
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return card;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No card was found with id = " + id);
@@ -118,8 +106,8 @@ public class Card implements Sendable {
 		List<CpCost> costs = new ArrayList<CpCost>();
 
 		try {
-			LOCAL_DEFAULT.openConnection();
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM cpcosts WHERE card = '" + getId() + "';");
 
 			while(rs.next()) {
@@ -128,7 +116,7 @@ public class Card implements Sendable {
 			
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return costs;
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
@@ -139,8 +127,8 @@ public class Card implements Sendable {
 		List<Action> actions = new ArrayList<Action>();
 
 		try {
-			LOCAL_DEFAULT.openConnection();
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM card_action WHERE card = '" + getId() + "';");
 
 			while(rs.next()) {
@@ -149,7 +137,7 @@ public class Card implements Sendable {
 			
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return actions;
 		} catch(SQLException e) {
 			throw new RuntimeException("An error occurred while fetching data from the db.");
@@ -160,8 +148,8 @@ public class Card implements Sendable {
 		Effect effect = null;
 
 		try {
-			LOCAL_DEFAULT.openConnection();
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT effect FROM effect_card WHERE card = '" + getId() + "' AND importance = 'PRIMARY';");
 
 			rs.next();
@@ -169,7 +157,7 @@ public class Card implements Sendable {
 			
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			
 			return effect;
 		} catch(SQLException e) {

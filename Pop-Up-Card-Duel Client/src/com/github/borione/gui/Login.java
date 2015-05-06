@@ -24,7 +24,6 @@ import com.github.borione.gui.components.ImagePanel;
 import com.github.borione.gui.components.MotionPanel;
 import com.github.borione.gui.components.ToolTip;
 import com.github.borione.util.Consts;
-import com.github.borione.util.ListUtils;
 import com.github.borione.util.StringUtils;
 
 import java.awt.Component;
@@ -45,9 +44,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Login extends JFrame {
 	

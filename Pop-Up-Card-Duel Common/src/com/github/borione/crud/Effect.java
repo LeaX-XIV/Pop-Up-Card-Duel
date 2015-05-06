@@ -12,7 +12,7 @@ import com.github.borione.util.ListUtils;
 
 public class Effect {
 	
-	public static final ConnectionTest LOCAL_DEFAULT = new ConnectionTest("jdbc:mysql://127.0.0.1:3306", Consts.DB_NAME, Consts.DB_USER, "");
+	public static ConnectionTest SERVER_DEFAULT = new ConnectionTest(Consts.DB_ADDRESS, Consts.DB_NAME, Consts.DB_USER, Consts.DB_PASSWORD);
 
 	private int id;
 	private String name;
@@ -31,8 +31,8 @@ public class Effect {
 	public static Effect factory(int id) {
 		Effect effect = null;
 		try {
-			LOCAL_DEFAULT.openConnection();
-			Statement stat = LOCAL_DEFAULT.getConnection().createStatement();
+			SERVER_DEFAULT.openConnection();
+			Statement stat = SERVER_DEFAULT.getConnection().createStatement();
 			ResultSet rs = stat.executeQuery("SELECT * FROM effects WHERE id = " + id + ";");
 			if(rs.next()) {
 				String name = rs.getString("name");
@@ -44,7 +44,7 @@ public class Effect {
 			}
 			rs.close();
 			stat.close();
-			LOCAL_DEFAULT.closeConnection();
+			SERVER_DEFAULT.closeConnection();
 			return effect;
 		} catch (SQLException e) {
 			throw new IllegalArgumentException("No effect was found with id = " + id);

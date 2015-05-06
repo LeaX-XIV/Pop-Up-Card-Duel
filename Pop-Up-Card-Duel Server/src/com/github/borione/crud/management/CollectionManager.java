@@ -30,7 +30,7 @@ public class CollectionManager {
 		try {
 			// With this, I'm sure the values are right
 			Player p = Player.factory(player);
-			Card c = Card.factory(card);
+			Card c = (Card) Card.factory(card);
 
 			stat = DEFAULT.getConnection().createStatement();
 			String command = "INSERT INTO collections (player, card)"
@@ -80,7 +80,7 @@ public class CollectionManager {
 		try {
 			// With this, I'm sure the values are right
 			Player p = Player.factory(player);
-			Card c = Card.factory(card);
+			Card c = (Card) Card.factory(card);
 
 			stat = DEFAULT.getConnection().createStatement();
 			String command = "DELETE FROM collections "
@@ -107,7 +107,7 @@ public class CollectionManager {
 
 	public static void main(String[] args) {
 		Player p = Player.factory("LeaX_XIV");
-		Card c = Card.factory(1);
+		Card c = (Card) Card.factory(1);
 		CollectionManager cm = new CollectionManager();
 
 		if(cm.addCardToCollection(p, c)) {

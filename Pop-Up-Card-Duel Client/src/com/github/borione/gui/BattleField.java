@@ -6,8 +6,6 @@ import java.awt.GridLayout;
 
 import javax.swing.ImageIcon;
 
-import java.awt.FlowLayout;
-
 import javax.swing.JLabel;
 
 import com.github.borione.crud.Avatar;
