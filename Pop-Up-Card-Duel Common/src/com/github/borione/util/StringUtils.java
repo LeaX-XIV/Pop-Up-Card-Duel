@@ -113,7 +113,11 @@ public class StringUtils {
 
 		throw new RuntimeException("Couldn't extract digest from " + str + ".");
 	}
-
+	
+	public static String changeSpaces(String str) {
+		return str.replace("%20", " ");
+	}
+	
 	public static Timestamp toTimestamp(String str) {
 		try {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss.SSS");

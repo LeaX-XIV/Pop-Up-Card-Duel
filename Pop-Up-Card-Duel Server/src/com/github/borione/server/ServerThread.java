@@ -104,6 +104,9 @@ public class ServerThread extends Thread {
 			//			}
 		} else if(command.startsWith(TypeRequest.LOGOUT.toString())) {
 			parent.logout(this.connection.getInetAddress().toString());
+			System.out.println("[" + new Date().toString() + "] " + this.connection.getInetAddress() + " logged out.");
+			System.out.println("Online players: " + parent.getLogged().toString());
+			return Consts.ALL_OK;
 		} else if(command.startsWith(TypeRequest.START_BATTLE.toString())) {
 			Deck deck1 = (Deck) Sendable.reconstruct(command.substring(command.indexOf(Consts.SEPARATOR) + 1));
 

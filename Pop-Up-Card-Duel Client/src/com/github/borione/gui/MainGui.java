@@ -11,10 +11,13 @@ import javax.swing.ImageIcon;
 
 import com.github.borione.connection.Request;
 import com.github.borione.connection.TypeRequest;
+import com.github.borione.crud.Player;
 
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.SocketTimeoutException;
 
 public class MainGui extends JFrame {
 
@@ -61,7 +64,15 @@ public class MainGui extends JFrame {
 		btnClose.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				new Request(TypeRequest.LOGOUT, null);
+				try {
+					new Request(TypeRequest.LOGOUT, new Player(null, null, null, null, null, null, 1)).send();
+				} catch (SocketTimeoutException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				System.exit(0);
 			}
 		});

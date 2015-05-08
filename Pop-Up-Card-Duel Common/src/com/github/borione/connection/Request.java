@@ -43,11 +43,9 @@ public class Request {
 
 		String command;
 		String answer;
-		Socket client = new Socket();
-		InetSocketAddress server = new InetSocketAddress(Consts.SERVER, Consts.SERVER_PORT);
+		Socket client = new Socket("127.0.0.1", Consts.SERVER_PORT);
 
 		// Connection request
-		client.connect(server, 1000);
 		input = new BufferedReader(new InputStreamReader(client.getInputStream()));
 		output = new OutputStreamWriter(client.getOutputStream());
 

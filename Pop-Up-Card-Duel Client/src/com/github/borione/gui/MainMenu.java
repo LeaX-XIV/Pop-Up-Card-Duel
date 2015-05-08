@@ -101,7 +101,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 //					System.out.println(d.getName());
 					
 					try {
-						Socket sk = new Socket(Consts.SERVER, 31415);
+						Socket sk = new Socket("127.0.0.1", 31415);
 						DataOutputStream out = new DataOutputStream(sk.getOutputStream());
 						BufferedReader in = new BufferedReader(new InputStreamReader(sk.getInputStream()));
 						
@@ -251,9 +251,12 @@ public class MainMenu extends JPanel implements ComponentListener {
 	}
 	
 	private void changeToBattle(Deck d, Socket sk) {
-		MainMenu.this.getParent().add(new BattleField(p, d, sk), BorderLayout.CENTER);
-		MainMenu.this.getParent().remove(MainMenu.this);
-		revalidate();
-		repaint();
+		JPanel content = (JPanel) getParent();
+		content.remove(this);
+		BattleField bf = new BattleField(p, d, sk);
+		content.add(bf, BorderLayout.CENTER);
+		content.revalidate();
+		content.repaint();
+		bf.populateView();
 	}
 }
