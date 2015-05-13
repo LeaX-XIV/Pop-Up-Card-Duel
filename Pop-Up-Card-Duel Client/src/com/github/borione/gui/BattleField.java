@@ -13,6 +13,7 @@ import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
 import com.github.borione.gui.components.ColoredProgressBar;
+import com.github.borione.gui.components.Timer2D;
 import com.github.borione.util.Consts;
 import com.github.borione.util.ImageUtils;
 import com.github.borione.util.NumberUtils;
@@ -39,6 +40,7 @@ import java.util.Random;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.border.LineBorder;
+import javax.swing.LayoutStyle.ComponentPlacement;
 
 public class BattleField extends JPanel {
 
@@ -65,6 +67,7 @@ public class BattleField extends JPanel {
 	private JPanel selfDeckPane;
 	private JLabel selfDeckBack;
 	private JLabel opponentDeckBack;
+	private Timer2D timer;
 
 	public static void main(String[] args) {
 		MainGui mg = new MainGui();
@@ -209,26 +212,35 @@ public class BattleField extends JPanel {
 		selfHP.addColorRange(0.5, Color.GREEN);
 		selfHP.setValue(20);
 		selfPane.add(selfAvatarPane, "cell 0 0,grow");
+		
+		timer = new Timer2D();
 		GroupLayout gl_selfAvatarPane = new GroupLayout(selfAvatarPane);
 		gl_selfAvatarPane.setHorizontalGroup(
-				gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
+			gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_selfAvatarPane.createSequentialGroup()
-						.addGap((275 / 2) - (100 / 2))
-						.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE)
-						.addContainerGap(40, Short.MAX_VALUE))
+					.addGroup(gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_selfAvatarPane.createSequentialGroup()
-								.addGap((275 / 2) - (146 / 2))
-								.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE)
-								.addContainerGap(17, Short.MAX_VALUE))
-				);
+							.addGap(87)
+							.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, 100, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_selfAvatarPane.createSequentialGroup()
+							.addGap(64)
+							.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, 146, GroupLayout.PREFERRED_SIZE))
+						.addGroup(gl_selfAvatarPane.createSequentialGroup()
+							.addContainerGap()
+							.addComponent(timer, 200, 200, 200)))
+					.addContainerGap(245, Short.MAX_VALUE))
+		);
 		gl_selfAvatarPane.setVerticalGroup(
-				gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
+			gl_selfAvatarPane.createParallelGroup(Alignment.LEADING)
 				.addGroup(gl_selfAvatarPane.createSequentialGroup()
-						.addGap(20)
-						.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addGap(5)
-						.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-				);
+					.addGap(20)
+					.addComponent(selfAvatar, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addGap(5)
+					.addComponent(selfHP, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+					.addPreferredGap(ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+					.addComponent(timer, 200, 200, 200)
+					.addContainerGap())
+		);
 		selfAvatarPane.setLayout(gl_selfAvatarPane);
 
 		selfHandPane = new JPanel();
