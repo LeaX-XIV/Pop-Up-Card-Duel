@@ -62,6 +62,7 @@ public class DeckSelect extends JDialog {
 	int selectedPage;
 	int sentaku = -1;
 	TwoWorker task;
+	private JPanel loadingPane;
 
 	/**
 	 * Launch the application.
@@ -206,7 +207,7 @@ public class DeckSelect extends JDialog {
 
 		pagesPane = new JPanel();
 		panel_1.add(pagesPane, BorderLayout.CENTER);
-		pagesPane.setLayout(new BorderLayout(0, 0));		
+		pagesPane.setLayout(new BorderLayout(0, 0));
 
 		pages = new ArrayList<JPanel>();
 
@@ -244,7 +245,7 @@ public class DeckSelect extends JDialog {
 	private class TwoWorker extends SwingWorker<List<Deck>, Deck> {
 
 		@Override
-		protected List<Deck> doInBackground() {
+		protected List<Deck> doInBackground() {			
 			decks = p.retriveDecks();
 			fetched = true;
 			
@@ -280,6 +281,7 @@ public class DeckSelect extends JDialog {
 			pages.add(p1);
 
 			selectedPage = 0;
+			pagesPane.removeAll();
 			pagesPane.add(pages.get(selectedPage), BorderLayout.CENTER);
 			lblPagine.setText((selectedPage + 1) + "/" + pages.size());
 			btnPrevious.setEnabled(false);

@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 
 import java.awt.Dimension;
@@ -20,6 +21,8 @@ import com.github.borione.crud.Card;
 import com.github.borione.crud.Deck;
 import com.github.borione.crud.Player;
 import com.github.borione.gui.components.CardDrawn;
+import com.github.borione.gui.components.ImagePanel;
+import com.github.borione.gui.components.Loading;
 import com.github.borione.main.Main;
 import com.github.borione.util.Consts;
 import com.github.borione.util.FontUtils;
@@ -30,6 +33,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.MouseAdapter;
@@ -161,7 +165,8 @@ public class MainMenu extends JPanel implements ComponentListener {
 					}
 					JScrollPane sp = new JScrollPane(p1);
 					// DOESN'T SHOW SCROLLBAR
-					sp.createVerticalScrollBar();
+					JScrollBar sb = new JScrollBar(JScrollBar.VERTICAL);
+					sp.setVerticalScrollBar(sb);
 					p.add(sp);
 					f.setBounds(100, 100, 700, 500);
 					f.setVisible(true);

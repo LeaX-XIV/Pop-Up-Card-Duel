@@ -2,6 +2,7 @@ package com.github.borione.gui;
 
 import java.awt.BorderLayout;
 import java.awt.EventQueue;
+import java.awt.Image;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -12,6 +13,7 @@ import javax.swing.ImageIcon;
 import com.github.borione.connection.Request;
 import com.github.borione.connection.TypeRequest;
 import com.github.borione.crud.Player;
+import com.github.borione.gui.components.ImagePanel;
 
 import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
@@ -49,6 +51,7 @@ public class MainGui extends JFrame {
 		setResizable(false);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setExtendedState(getExtendedState() | JFrame.MAXIMIZED_BOTH);
+//		Image background = getToolkit().createImage(getClass().getResource("/images/loading.gif"));
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
