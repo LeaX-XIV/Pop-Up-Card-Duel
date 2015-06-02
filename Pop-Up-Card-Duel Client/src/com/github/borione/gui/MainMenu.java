@@ -92,7 +92,7 @@ public class MainMenu extends JPanel implements ComponentListener {
 		lblName.setMaximumSize(new Dimension(400, 50));
 		lblName.setPreferredSize(new Dimension(100, 20));
 
-		btnQuickBattle = new JButton("quick battle");
+		btnQuickBattle = new JButton("Quick Battle");
 		btnQuickBattle.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
