@@ -15,6 +15,7 @@ import javax.swing.JButton;
 import javax.swing.ImageIcon;
 import javax.swing.border.LineBorder;
 
+import com.github.borione.connection.Sendable;
 import com.github.borione.connection.TypeRequest;
 import com.github.borione.crud.Avatar;
 import com.github.borione.crud.Card;
@@ -51,9 +52,9 @@ import javax.swing.SwingConstants;
 public class MainMenu extends JPanel implements ComponentListener {
 
 	static Object lock = new Object();
-	
+
 	Player p;
-	
+
 	GroupLayout groupLayout;
 
 	JLabel lblPhoto;
@@ -100,24 +101,25 @@ public class MainMenu extends JPanel implements ComponentListener {
 					btnQuickBattle.setEnabled(false);
 					btnCollectionManager.setEnabled(false);
 					DeckSelect ds = new DeckSelect((JFrame) MainMenu.this.getParent().getParent().getParent().getParent(), p);				    
-					 
+
 					Deck d = ds.getSelection();
-//					System.out.println(d.getName());
-					
+					//					System.out.println(d.getName());
+
 					try {
 						Socket sk = new Socket("127.0.0.1", 31415);
 						DataOutputStream out = new DataOutputStream(sk.getOutputStream());
 						BufferedReader in = new BufferedReader(new InputStreamReader(sk.getInputStream()));
-						
+
 						out.writeBytes(TypeRequest.START_BATTLE.toString() + Consts.SEPARATOR +
 								d.formatData() + "\n");
-						
+
 						String answer = in.readLine();
-						
-						if(answer.equals(Consts.ALL_OK)) {
-							changeToBattle(d, sk);
+
+						if(answer.startsWith(Consts.ALL_OK)) {
+							Player opponent = (Player) Sendable.reconstruct(answer.substring(answer.indexOf(Consts.SEPARATOR) + 1));
+							changeToBattle(d, opponent, sk);
 						}
-						
+
 					} catch (UnknownHostException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -125,24 +127,24 @@ public class MainMenu extends JPanel implements ComponentListener {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
-					
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 					btnQuickBattle.setEnabled(true);
 					btnCollectionManager.setEnabled(true);					
 				}
@@ -254,11 +256,11 @@ public class MainMenu extends JPanel implements ComponentListener {
 	@Override
 	public void componentShown(ComponentEvent e) {
 	}
-	
-	private void changeToBattle(Deck d, Socket sk) {
+
+	private void changeToBattle(Deck d, Player opponent, Socket sk) {
 		JPanel content = (JPanel) getParent();
 		content.remove(this);
-		BattleField bf = new BattleField(p, d, sk);
+		BattleField bf = new BattleField(p, d, opponent, sk);
 		content.add(bf, BorderLayout.CENTER);
 		content.revalidate();
 		content.repaint();

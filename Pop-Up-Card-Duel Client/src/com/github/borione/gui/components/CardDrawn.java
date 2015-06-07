@@ -31,18 +31,24 @@ public class CardDrawn extends ImagePanel {
 	private JLabel esper;
 	private JLabel attack;
 	private JTextPane description;
+	
+	public static final int DEFAULT_WIDTH = 256;
+	public static final int DEFAULT_HEIGHT = 384;
 
 	public static void main(String[] args) {
 		JFrame f = new JFrame();
 		f.setUndecorated(true);
 		f.setContentPane(new CardDrawn(Card.factory(1)));
-		f.setBounds(100, 100, 256, 384);
+		f.setBounds(100, 100, DEFAULT_WIDTH, DEFAULT_HEIGHT);
 		f.setBackground(new Color(0, 255, 0, 0));
 		f.setVisible(true);
 	}
 
-	private CardDrawn(Image image) {
+	public CardDrawn(Image image) {
 		super(image);
+		setOpaque(false);
+		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 	}
 
 	/**
@@ -57,8 +63,8 @@ public class CardDrawn extends ImagePanel {
 		//		Image bg = ImageUtils.readImage("images/cards/" + NumberUtils.toNumDigits(c.getId(), 3) + ".png");
 		//		background = ImageUtils.resizeBetter(bg, 256, 384);
 		setOpaque(false);
-		setSize(256, 384);
-		setPreferredSize(new Dimension(256, 384));
+		setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+		setPreferredSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
 		// FIXME: setSize(background.getWidth(null), background.getHeight(null));
 

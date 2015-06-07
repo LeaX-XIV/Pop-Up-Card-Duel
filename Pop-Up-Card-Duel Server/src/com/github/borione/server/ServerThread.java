@@ -113,6 +113,7 @@ public class ServerThread extends Thread {
 			/*
 			 * SEARCH FOR OPPONENT
 			 */
+				
 
 			List<Card> d2 = new ArrayList<Card>();
 
@@ -123,13 +124,31 @@ public class ServerThread extends Thread {
 			// $ Deck ready
 
 			try {
-				output.write(Consts.ALL_OK + "\n");
+				// $ SEND OTHER PLAYER'S NAME
+				output.write(Consts.ALL_OK + Consts.SEPARATOR + Player.factory("admin").formatData() + "\n");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-
+			// DRAW 3 CARDS
+			
+			List<Card> hand = new ArrayList<Card>();
+			hand.add(d2.remove(0));
+			hand.add(d2.remove(0));
+			hand.add(d2.remove(0));
+			
+			// SEND COLOR
+			String message = "COLOR" + Consts.SEPARATOR + hand.get(0).getColor().toString()
+					+ Consts.SEPARATOR + hand.get(1).getColor().toString()
+					+ Consts.SEPARATOR + hand.get(2).getColor().toString() + "\n";
+//			System.out.println(message);
+			try {
+				output.write(message);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 
 
